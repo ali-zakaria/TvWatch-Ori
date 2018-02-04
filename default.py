@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
-#Venom.
-# https://github.com/Kodi-vStream/venom-xbmc-addons
+#Primatech.
+# https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 
 from resources.lib.statistic import cStatistic
 from resources.lib.gui.hoster import cHosterGui
@@ -14,6 +14,7 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.config import cConfig
 from resources.lib.config import GestionCookie
 from resources.lib.db import cDb
+from resources.lib.mySqlDB import cMySqlDB
 from resources.lib.util import cUtil
 from resources.lib.authentification import cAuthentification
 
@@ -26,41 +27,47 @@ class main:
     def __init__(self):
         self.parseUrl()
         cDb()._create_tables()
+        cConfig().log('Constructor of default.py')
+
+    def __del__(self):
+        cMySqlDB().updateIsPlaying("False", cDb().get_clientID())
+        # cConfig().log('Destructor of default.py')
 
     def parseUrl(self):
-
-        #xbmc.log('arg :' + str(sys.argv), xbmc.LOGNOTICE)
-        #xbmc.log('Debug 1 >>' + str(xbmc.getInfoLabel('Container().CurrentPage')) , xbmc.LOGNOTICE)
-        #xbmc.log('Debug 2 >>' + str(xbmc.getInfoLabel('Container.FolderPath')) , xbmc.LOGNOTICE)
-
         cConfig().log('call parseUrl methode')
 
-        # if cAuthentification().checkCredentials() == False:
-        #     quit()
+        # try:
+        #     from resources.lib.about import cAbout
+        #     if cAbout().checkHash():
+        #         quit()
+        # except:
+        #     pass
+
+        if cAuthentification().checkCredentials() == False:
+            quit()
 
         oInputParameterHandler = cInputParameterHandler()
         if (oInputParameterHandler.exist('function')):
             sFunction = oInputParameterHandler.getValue('function')
         else:
-            cConfig().log('in default.py call load')
             sFunction = "load"
 
-        if (sFunction=='DoNothing'):
+        if (sFunction =='DoNothing'):
             return
 
         if (not oInputParameterHandler.exist('site')):
-
-            # #mise a jour
-            # try:
-            #     from resources.lib.about import cAbout
-            #     cAbout().getUpdate()
-            # except:
-            #     pass
+            # mise a jour
+            try:
+                from resources.lib.about import cAbout
+                cAbout().getUpdate()
+            except:
+                pass
 
             #charge home
             #plugins = __import__('resources.lib.home', fromlist=['home']).cHome()
             #function = getattr(plugins, 'showSources')
-            from resources.sites.zone_telechargement_ws import load
+            cConfig().log('In default.py call load')
+            from resources.sites.zone_telechargement_ws import load, getNextEpisode
             load() #zone_telechargement_ws
 
             return
@@ -113,7 +120,7 @@ class main:
                     for aPlugin in aPlugins:
 
                         oOutputParameterHandler = cOutputParameterHandler()
-                        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+                        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
                         icon = 'sites/%s.png' % (aPlugin[1])
                         oGui.addDir(aPlugin[1], 'load', aPlugin[0], icon, oOutputParameterHandler)
 
@@ -217,7 +224,7 @@ def searchGlobal():
 
     #xbmc.log(str(aPlugins), xbmc.LOGNOTICE)
 
-    dialog = cConfig().createDialog("vStream")
+    dialog = cConfig().createDialog("TvWatch")
     #kodi 17 vire la fenetre busy qui ce pose au dessus de la barre de Progress
     try:
         xbmc.executebuiltin("Dialog.Close(busydialog)")
@@ -236,7 +243,7 @@ def searchGlobal():
             break
 
         #nom du site
-        oGui.addText(plugin['identifier'], '%s. [COLOR olive]%s[/COLOR]' % ((count+1), plugin['name']), 'sites/%s.png' % (plugin['identifier']))
+        oGui.addText(plugin['identifier'], '%s. [COLOR khaki]%s[/COLOR]' % ((count+1), plugin['name']), 'sites/%s.png' % (plugin['identifier']))
         #recherche import
         _pluginSearch(plugin, sSearchText)
 

@@ -1,14 +1,11 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 import os, sys
 import urllib
 import xbmc
-
-# import mysql.connector
-
 
 SITE_IDENTIFIER = 'cDb'
 SITE_NAME = 'DB'
@@ -27,22 +24,21 @@ class cDb:
         try:
             self.db = sqlite.connect(DB)
             self.dbcur = self.db.cursor()
-        except:
-            return False
+        except Exception, e:
+            cConfig().log('cDb ERROR in Constructor: ' + e.message)
 
     def __del__(self):
         ''' Cleanup db when object destroyed '''
         try:
             self.dbcur.close()
-            self.dbcon.close()
-        except: pass
+            self.db.close()
+        except Exception, e:
+            cConfig().log('cDb ERROR in Destructor: ' + e.message)
 
     def _create_tables(self):
 
-        sql_create2 = "DROP TABLE history"
-
         ''' Create table '''
-        sql_create = "CREATE TABLE IF NOT EXISTS history ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""siteurl TEXT, ""title TEXT, ""icon TEXT, ""UNIQUE(siteurl)"");"
+        sql_create = "CREATE TABLE IF NOT EXISTS history ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""siteurl TEXT, ""rawtitle TEXT, ""title TEXT, ""icon TEXT, ""type TEXT, ""quality TEXT, ""UNIQUE(rawtitle)"");"
         self.dbcur.execute(sql_create)
 
         sql_create = "CREATE TABLE IF NOT EXISTS resume ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""timepoint TEXT, ""UNIQUE(title)"");"
@@ -60,7 +56,7 @@ class cDb:
         sql_create = "CREATE TABLE IF NOT EXISTS download ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""title TEXT, ""url TEXT, ""path TEXT, ""cat TEXT, ""icon TEXT, ""size TEXT,""totalsize TEXT, ""status TEXT, ""UNIQUE(title, path)"");"
         self.dbcur.execute(sql_create)
 
-        sql_create = "CREATE TABLE IF NOT EXISTS episodes ("" addon_id integer PRIMARY KEY AUTOINCREMENT, ""siteurl TEXT, ""title TEXT, ""icon TEXT, ""UNIQUE(siteurl)"");"
+        sql_create = "CREATE TABLE IF NOT EXISTS clientIdTable (""clientID TEXT, ""UNIQUE(clientID)"");"
         self.dbcur.execute(sql_create)
 
         cConfig().log('Table initialized')
@@ -80,7 +76,7 @@ class cDb:
     def str_conv2(self, data):
         data = data.replace(" ", "_")
         data = data.replace("'", "")
-
+        data = data.replace("-", "")
         return data
 
     def insert_resume(self, meta):
@@ -92,18 +88,28 @@ class cDb:
             self.dbcur.execute(ex, (title, timepoint))
             self.db.commit()
             cConfig().log('SQL INSERT resume Successfully')
-            self.db.close()
         except Exception, e:
             cConfig().log('SQL ERROR INSERT resume: ' + e.message)
-            pass
+            if 'UNIQUE constraint failed' in e.message:
+                self.update_resume(meta)
+
+    def update_resume(self, meta):
+        title = self.str_conv2(meta['title'])
+        timepoint = meta['timepoint']
+        try:
+            ex = "UPDATE resume SET timepoint = '%s' WHERE title = '%s'" % (timepoint, title)
+            self.dbcur.execute(ex)
+            self.db.commit()
+            cConfig().log('SQL UPDATE resume Successfully')
+        except Exception, e:
+            cConfig().log('SQL ERROR UPDATE resume: ' + e.message)
 
     def insert_watched(self, meta):
-
         title = self.str_conv(meta['title'])
         site = urllib.quote_plus(meta['site'])
         ex = "INSERT INTO watched (title, site) VALUES (?, ?)"
-        self.dbcur.execute(ex, (title,site))
         try:
+            self.dbcur.execute(ex, (title,site))
             self.db.commit()
             cConfig().log('SQL INSERT watched Successfully')
         except Exception, e:
@@ -119,7 +125,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE resume: ' + e.message)
@@ -133,7 +138,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
             if matchedrow:
                 count = 1
             return count
@@ -148,7 +152,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE watched: ' + e.message)
@@ -165,7 +168,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            self.dbcur.close()
             return
         except Exception, e:
             cConfig().log('SQL ERROR DELETE resume: ' + e.message)
@@ -184,7 +186,6 @@ class cDb:
             ex = "INSERT INTO favorite (title, siteurl, site, fav, cat, icon, fanart) VALUES (?, ?, ?, ?, ?, ?, ?)"
             self.dbcur.execute(ex, (title,siteurl, meta['site'],meta['fav'],meta['cat'],sIcon,meta['fanart']))
             self.db.commit()
-            self.db.close()
             cConfig().log('SQL INSERT favorite Successfully')
             cConfig().showInfo(meta['title'], 'Enregistré avec succés')
         except Exception, e:
@@ -199,7 +200,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE favorite: ' + e.message)
         return matchedrow
@@ -225,8 +225,7 @@ class cDb:
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            self.dbcur.close()
-            cConfig().showInfo('vStream', 'Favoris supprimé')
+            cConfig().showInfo('TvWatch', 'Favoris supprimé')
             cConfig().update()
             return False, False
         except Exception, e:
@@ -289,7 +288,6 @@ class cDb:
 
         try:
             self.db.commit()
-            self.db.close()
             cConfig().log('SQL INSERT download Successfully')
             cConfig().showInfo(meta['title'], 'Enregistré avec succés')
         except Exception, e:
@@ -306,7 +304,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
@@ -319,7 +316,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
@@ -333,7 +329,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
@@ -352,7 +347,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
@@ -363,7 +357,6 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
@@ -381,55 +374,10 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
-            self.dbcur.close()
             return False, False
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE download: ' + e.message)
             return False, False
-
-    #***********************************
-    #   episodes fonctions
-    #***********************************
-
-    def insert_episodes(self, meta):
-        title = meta['title']
-        siteurl = meta['siteurl']
-        sIcon = meta['icon']
-        try:
-            ex = "INSERT INTO episodes (title, siteurl, icon) VALUES (?, ?, ?)"
-            self.dbcur.execute(ex, (title, siteurl, sIcon))
-            self.db.commit()
-            self.dbcur.close()
-            cConfig().log('SQL INSERT Episodes Successfully')
-            return True
-        except Exception, e:
-            cConfig().log('SQL ERROR INSERT episodes: ' + e.message)
-            return False
-
-    def get_episodes(self):
-        sql_select = "SELECT * FROM episodes"
-        try:
-            self.dbcur.execute(sql_select)
-            matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
-            return matchedrow
-        except Exception, e:
-            cConfig().log('SQL ERROR GET episodes: ' + e.message)
-            return None
-
-    def del_episodes(self, siteurl = '', deleteAll = False):
-        if siteurl != '':
-            sql_delete = "DELETE FROM episodes WHERE siteurl = '%s'" % (siteurl)
-        if deleteAll:
-            sql_delete = "DELETE FROM episodes;"
-        try:
-            self.dbcur.execute(sql_delete)
-            self.db.commit()
-            self.dbcur.close()
-            return True
-        except Exception, e:
-            cConfig().log('SQL ERROR DELETE episodes: ' + e.message)
-            return False
 
     #***********************************
     #   history fonctions
@@ -439,16 +387,33 @@ class cDb:
         title = meta['title']
         siteurl = meta['siteurl']
         sIcon = meta['icon']
+        sType = meta['type']
+        sRawtitle = self.str_conv2(meta['rawtitle'])
+        sQuality = meta['quality']
         try:
-            ex = "INSERT INTO history (title, siteurl, icon) VALUES (?, ?, ?)"
-            self.dbcur.execute(ex, (title, siteurl, sIcon))
+            ex = "INSERT INTO history (title, siteurl, icon, type, rawtitle, quality) VALUES (?, ?, ?, ?, ?, ?)"
+            self.dbcur.execute(ex, (title, siteurl, sIcon, sType, sRawtitle, sQuality))
             self.db.commit()
-            self.db.close()
             cConfig().log('SQL INSERT history Successfully')
-            return True
         except Exception, e:
             cConfig().log('SQL ERROR INSERT history: ' + e.message)
-            return False
+            if 'UNIQUE constraint failed' in e.message:
+                self.update_history(meta)
+
+    def update_history(self, meta):
+        title = meta['title']
+        siteurl = meta['siteurl']
+        sIcon = meta['icon']
+        sType = meta['type']
+        sRawtitle = self.str_conv2(meta['rawtitle'])
+        sQuality = meta['quality']
+        try:
+            ex = "UPDATE history SET title='%s', siteurl='%s', type='%s', icon='%s', quality='%s' WHERE rawtitle='%s'" % (title, siteurl, sType, sIcon, sQuality, sRawtitle)
+            self.dbcur.execute(ex)
+            self.db.commit()
+            cConfig().log('SQL UPDATE history Successfully')
+        except Exception, e:
+            cConfig().log('SQL UPDATE INSERT history: ' + e.message)
 
 
     def get_history(self):
@@ -456,24 +421,59 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
-            self.dbcur.close()
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR GET history: ' + e.message)
             return None
 
 
-    def del_history(self, siteurl = '', deleteAll = False):
-        if siteurl != '':
-            sql_delete = "DELETE FROM history WHERE siteurl = '%s'" % (siteurl)
-        if deleteAll:
-            sql_delete = "DELETE FROM history;"
+    def del_history(self, sRawtitle):
+        sRawtitle = self.str_conv2(sRawtitle)
+        sql_delete = "DELETE FROM history WHERE rawtitle = '%s'" % (sRawtitle)
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()
             cConfig().log('del_history: successfully')
-            self.dbcur.close()
-            return True
         except Exception, e:
             cConfig().log('SQL ERROR DELETE history: ' + e.message)
+
+    #***********************************
+    #   code fonctions
+    #***********************************
+
+    def insert_clientID(self, clientID):
+        try:
+            ex = "INSERT INTO clientIdTable (clientID) VALUES (?)"
+            self.dbcur.execute(ex, clientID)
+            self.db.commit()
+            cConfig().log('SQL INSERT clientIdTable Successfully')
+            return True
+        except Exception, e:
+            cConfig().log('SQL ERROR INSERT clientIdTable: ' + e.message)
+            return False
+
+
+    def get_clientID(self):
+        sql_select = "SELECT clientID FROM clientIdTable"
+        try:
+            self.dbcur.execute(sql_select)
+            matchedrow = self.dbcur.fetchone()
+            return matchedrow[0]
+        except Exception, e:
+            cConfig().log('SQL ERROR GET clientIdTable: ' + e.message)
+            return None
+
+
+    def del_clientID(self, clientID = '', deleteAll = False):
+        if clientID != '':
+            sql_delete = "DELETE FROM clientIdTable WHERE clientID = '%s'" % (clientID)
+        if deleteAll:
+            sql_delete = "DELETE FROM clientIdTable;"
+        try:
+            self.dbcur.execute(sql_delete)
+            self.db.commit()
+            cConfig().log('del_clientID: successfully')
+            return True
+        except Exception, e:
+            cConfig().log('SQL ERROR DELETE clientIdTable: ' + e.message)
             return False

@@ -147,13 +147,13 @@ class cRechercheHandler:
             return False
 
         #historique
-        try:
-            if (cConfig().getSetting("history-view") == 'true'):
-                meta = {}
-                meta['title'] = sText
-                meta['disp'] = sCat
-                # cDb().insert_history(meta)
-        except: pass
+        # try:
+        #     if (cConfig().getSetting("history-view") == 'true'):
+        #         meta = {}
+        #         meta['title'] = sText
+        #         meta['disp'] = sCat
+        #         # cDb().insert_history(meta)
+        # except: pass
 
         sFolder =  self.getRootFolder()
         sFolder = os.path.join(sFolder, 'resources/sites')

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 #from resources.lib.gui.gui import cGui
 #from resources.lib.gui.hoster import cHosterGui

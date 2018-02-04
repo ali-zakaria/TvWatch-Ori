@@ -33,4 +33,6 @@
 *.app
 
 #ignore files
+manageUsers.py
+password.py
 

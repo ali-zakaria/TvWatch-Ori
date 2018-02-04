@@ -1,11 +1,12 @@
 #-*- coding: utf-8 -*-
-# https://github.com/Kodi-vStream/venom-xbmc-addons
+# https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 from resources.lib.handler.premiumHandler import cPremiumHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
 from resources.lib.gui.gui import cGui
 from resources.hosters.hoster import iHoster
+from resources.lib.config import cConfig
 
 import urllib2,urllib,xbmcgui,re,xbmc
 
@@ -163,7 +164,6 @@ class cHoster(iHoster):
 
 
     def __getMediaLinkByPremiumUser(self):
-
         if not self.oPremiumHandler.Authentificate():
             return False, False
 
@@ -214,8 +214,8 @@ class cHoster(iHoster):
 
             sHtmlContent = self.oPremiumHandler.GetHtml(self.__sUrl,postdata)
 
-            sPattern =  '<a href *=[\'"](?!http:\/\/uptostream.+)([^<>]+?)[\'"]\s*>\s*<span class\s*=\s*[\'"]button_upload green[\'"]\s*>'
-            aResult = oParser.parse(sHtmlContent, sPattern)
+            sPattern =  '<a href *=[\'"](?!http:\/\/uptostream.+)([^<>]+?)[\'"]\s*>\s*<span class\s*=\s*[\'"]button_upload green[\'"]\s*>' #green khaki
+            aResult = oParser.parse(sHtmlContent, sPattern) #ici on get le link a jouer directement
 
             if (aResult[0]):
                 return urllib.quote(aResult[1][0], safe=":/")

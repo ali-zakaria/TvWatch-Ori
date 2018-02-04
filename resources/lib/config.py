@@ -13,7 +13,7 @@ DIALOG2 = None
 #------------------------
 
 class GestionCookie():
-    PathCache = xbmc.translatePath(xbmcaddon.Addon('plugin.video.vstream').getAddonInfo("profile")).decode("utf-8")
+    PathCache = xbmc.translatePath(xbmcaddon.Addon('plugin.video.tvwatch').getAddonInfo("profile")).decode("utf-8")
 
     def DeleteCookie(self,Domain):
         file = os.path.join(self.PathCache,'Cookie_'+ str(Domain) +'.txt')
@@ -60,6 +60,7 @@ class cConfig():
             import xbmcaddon
             self.__bIsDharma = True
         except ImportError:
+            self.log("Can not import xbmcaddon")
             self.__bIsDharma = False
 
         try:
@@ -69,13 +70,14 @@ class cConfig():
             else :
                 self.__bIsKrypton = False
         except:
+            self.log("Not Krypton version")
             self.__bIsKrypton = False
 
 
     def __init__(self):
         self.__check()
 
-        if (self.__bIsDharma):
+        if self.__bIsDharma:
             import xbmcaddon
             self.__oSettings = xbmcaddon.Addon(self.getPluginId())
             self.__aLanguage = self.__oSettings.getLocalizedString
@@ -90,7 +92,7 @@ class cConfig():
             self.__sIcon = os.path.join(self.__oPath,'resources', 'art','icon.png')
             self.__sFanart = os.path.join(self.__oPath,'resources','art','fanart.jpg')
             self.__sFileFav = os.path.join(self.__oCache,'favourite.db').decode("utf-8")
-            self.__sFileDB = os.path.join(self.__oCache,'vstream.db').decode("utf-8")
+            self.__sFileDB = os.path.join(self.__oCache,'tvwatch.db').decode("utf-8")
             self.__sFileCache = os.path.join(self.__oCache,'metadata.db').decode("utf-8")
 
 
@@ -101,7 +103,7 @@ class cConfig():
         return self.__bIsKrypton
 
     def getPluginId(self):
-        return 'plugin.video.vstream'
+        return 'plugin.video.tvwatch'
 
     def getAddonId(self):
         return self.__oId
@@ -191,12 +193,12 @@ class cConfig():
 
     def createDialogOK(self, label):
         oDialog = xbmcgui.Dialog()
-        oDialog.ok('vStream', label)
+        oDialog.ok('TvWatch', label)
         return oDialog
 
     def createDialogYesNo(self, label):
         oDialog = xbmcgui.Dialog()
-        qst = oDialog.yesno("vStream", label)
+        qst = oDialog.yesno("TvWatch", label)
         return qst
 
     def createDialogNum(self, label):
@@ -234,7 +236,7 @@ class cConfig():
     def finishDialog(self, dialog):
         if xbmcgui.Window(10101).getProperty('search') != 'true':
             dialog.close()
-            xbmc.log('\t[PLUGIN] Vstream: close dialog')
+            xbmc.log('\t[PLUGIN] TvWatch: close dialog')
             del dialog
             return False
 
@@ -265,12 +267,12 @@ class cConfig():
             xbmc.sleep(100)
 
     def error(self, e):
-        xbmc.executebuiltin("Notification(%s,%s,%s,%s)" % ('Vstream', ('Erreur: '+str(e)), '10000', self.__sIcon))
-        xbmc.log('\t[PLUGIN] Vstream Erreur: '+str(e))
+        xbmc.executebuiltin("Notification(%s,%s,%s,%s)" % ('TvWatch', ('Erreur: '+str(e)), '10000', self.__sIcon))
+        xbmc.log('\t[PLUGIN] TvWatch Erreur: '+str(e))
         #cConfig().ERROR.append(e)
 
     def log(self, e):
-        xbmc.log('\t[PLUGIN] Vstream: '+str(e), xbmc.LOGNOTICE)
+        xbmc.log('\t[PLUGIN] TvWatch: '+str(e), xbmc.LOGNOTICE)
 
     def openerror(self):
         xbmc.executebuiltin( "ActivateWindow(10147)" )
@@ -281,7 +283,7 @@ class cConfig():
             text = text.replace(',', '\n')
             value += '\n'+text+'\n'
 
-        self.win.getControl(1).setLabel("vStream popup Erreur")
+        self.win.getControl(1).setLabel("TvWatch popup Erreur")
         self.win.getControl(5).setText(str(value))
 
     def TextBoxes(self, heading, anounce):
@@ -313,34 +315,36 @@ class cConfig():
 
     def WindowsBoxes(self, sTitle, sFileName, num,year = ''):
 
-        API = self.getSetting('api_tmdb')
+        # API = self.getSetting('api_tmdb')
 
         #Presence de l'addon ExtendedInfo ?
         try:
             if (xbmcaddon.Addon('script.extendedinfo') and self.getSetting('extendedinfo-view') == 'true'):
                 if num == "2":
-                    self.showInfo('vStream', 'Lancement de ExtendInfo')
+                    self.showInfo('TvWatch', 'Lancement de ExtendInfo')
                     xbmc.executebuiltin('XBMC.RunScript(script.extendedinfo, info=extendedtvinfo, name=%s)' % sFileName)
                     return
                 elif num == "1":
-                    self.showInfo('vStream', 'Lancement de ExtendInfo')
+                    self.showInfo('TvWatch', 'Lancement de ExtendInfo')
                     xbmc.executebuiltin('XBMC.RunScript(script.extendedinfo, info=extendedinfo, name=%s)' % sFileName)
                     return
         except:
             pass
 
-        #Sinon on gere par Vstream via la lib TMDB
+        #Sinon on gere par TvWatch via la lib TMDB
         if num == "1":
             try:
                 from resources.lib.tmdb import cTMDb
-                grab = cTMDb(api_key=self.getSetting('api_tmdb'))
+                # grab = cTMDb(api_key = self.getSetting('api_tmdb'))
+                grab = cTMDb()
                 meta = grab.get_meta('movie',sFileName, '', xbmc.getInfoLabel('ListItem.Property(TmdbId)'))
             except:
                 pass
         elif num == "2":
             try:
                 from resources.lib.tmdb import cTMDb
-                grab = cTMDb(api_key=self.getSetting('api_tmdb'))
+                # grab = cTMDb(api_key=self.getSetting('api_tmdb'))
+                grab = cTMDb()
                 meta = grab.get_meta('tvshow',sFileName, '', xbmc.getInfoLabel('ListItem.Property(TmdbId)'))
             except:
                 pass
@@ -350,7 +354,7 @@ class cConfig():
             #dialog par defaut
             #xbmc.executebuiltin("Action(Info)")
             #fenetre d'erreur
-            self.showInfo('Vstream', self.getlanguage(30204))
+            self.showInfo('TvWatch', self.getlanguage(30204))
 
             return
 
@@ -431,7 +435,7 @@ class cConfig():
 
             def person(self, sid=""):
                 from resources.lib.tmdb import cTMDb
-                grab = cTMDb(api_key=API, lang='en')
+                grab = cTMDb(lang='en')
                 sUrl = 'person/' + str(sid)
                 meta = grab.getUrl(sUrl)
 
@@ -496,7 +500,7 @@ class cConfig():
                     sid = item.getProperty('id')
 
                     from resources.lib.tmdb import cTMDb
-                    grab = cTMDb(api_key=API)
+                    grab = cTMDb()
                     sUrl = 'person/' + str(sid) + '/movie_credits'
                     try:
                         meta = grab.getUrl(sUrl)
@@ -511,7 +515,7 @@ class cConfig():
                     xbmcgui.Window(10000).setProperty('nav', '2')
 
                     from resources.lib.tmdb import cTMDb
-                    grab = cTMDb(api_key=API)
+                    grab = cTMDb()
                     sUrl = 'movie/%s/similar' % str(sid)
                     try:
                         meta = grab.getUrl(sUrl)
@@ -525,7 +529,7 @@ class cConfig():
                     xbmcgui.Window(10000).setProperty('nav', '3')
 
                     from resources.lib.tmdb import cTMDb
-                    grab = cTMDb(api_key=API)
+                    grab = cTMDb()
                     sUrl = 'movie/%s/recommendations' % str(sid)
                     try:
                         meta = grab.getUrl(sUrl)

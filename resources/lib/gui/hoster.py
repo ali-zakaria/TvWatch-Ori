@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
-# Venom.
-# https://github.com/Kodi-vStream/venom-xbmc-addons
+# Primatech.
+# https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
@@ -18,23 +18,23 @@ class cHosterGui:
     SITE_NAME = 'cHosterGui'
 
     # step 1 - bGetRedirectUrl in ein extra optionsObject verpacken
-    def showHoster(self, oHoster, sMediaUrl, sThumbnail, protectedLink = '', bGetRedirectUrl = False):
+    def showHoster(self, oHoster, sMediaUrl, sThumbnail, protectedLink, sQual, bGetRedirectUrl = False):
         cConfig().log('showHoster')
 
         oInputParameterHandler = cInputParameterHandler()
         sMovieTitle = oInputParameterHandler.getValue('title')
 
-        params = ['','','','','','']
+        params = ['','','','','','','']
 
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('sMediaUrl', sMediaUrl)
-        oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)
-        oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
-        oOutputParameterHandler.addParameter('protectedLink', protectedLink)
-        oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
-        oOutputParameterHandler.addParameter('sTitle', oHoster.getDisplayName())
-        oOutputParameterHandler.addParameter('sId', 'cHosterGui')
-        oOutputParameterHandler.addParameter('siteUrl', sMediaUrl)
+        # oOutputParameterHandler = cOutputParameterHandler()
+        # oOutputParameterHandler.addParameter('sMediaUrl', sMediaUrl)
+        # oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)
+        # oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
+        # oOutputParameterHandler.addParameter('protectedLink', protectedLink)
+        # oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
+        # oOutputParameterHandler.addParameter('sTitle', oHoster.getDisplayName())
+        # oOutputParameterHandler.addParameter('sId', 'cHosterGui')
+        # oOutputParameterHandler.addParameter('siteUrl', sMediaUrl)
 
         params[0] = oHoster.getPluginIdentifier()
         params[1] = sMediaUrl
@@ -42,6 +42,7 @@ class cHosterGui:
         params[3] = oHoster.getFileName()
         params[4] = oHoster.getDisplayName()
         params[5] = sThumbnail
+        params[6] = sQual
 
         #existe dans le menu krypton 17
         # if not util.isKrypton():
@@ -93,7 +94,7 @@ class cHosterGui:
         exec "from resources.hosters." + sHosterFileName + " import cHoster"
         return cHoster()
 
-    def play(self, params = ['','','','','','']):
+    def play(self, params = ['','','','','','','']):
         # oGui = cGui()
 
         oInputParameterHandler = cInputParameterHandler()
@@ -103,14 +104,16 @@ class cHosterGui:
         sFileName = oInputParameterHandler.getValue('sFileName')
         sTitle = oInputParameterHandler.getValue('title')
         sThumbnail = oInputParameterHandler.getValue('sThumbnail')
+        sQual = ''
 
-        if params != ['','','','','','']:
+        if params != ['','','','','','','']:
             sHosterIdentifier = params[0]
             sMediaUrl = params[1]
             protectedLink = params[2]
             sFileName = params[3]
             sTitle = params[4]
             sThumbnail = params[5]
+            sQual = params[6]
 
         if not sTitle:
             sTitle = sFileName
@@ -146,13 +149,14 @@ class cHosterGui:
                 if len(aLink) > 2:
                     oPlayer.AddSubtitles(aLink[2])
 
-                return oPlayer.run(oGuiElement, sFileName, aLink[1], protectedLink)
+                return oPlayer.run(oGuiElement, sFileName, aLink[1], protectedLink, sQual)
             else:
                 cConfig().error("Fichier introuvable")
                 return False
 
-        except:
+        except Exception, e:
             cConfig().error("Fichier introuvable")
+            cConfig().log('Error ' + e.message)
             return False
 
         # oGui.setEndOfDirectory()

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-# https://github.com/Kodi-vStream/venom-xbmc-addons
+# https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 import urllib
 import urllib2

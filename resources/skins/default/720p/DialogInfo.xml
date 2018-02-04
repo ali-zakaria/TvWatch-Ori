@@ -775,7 +775,7 @@
                         <font>font12_title</font>
                         <height>40</height>
                         <width>180</width>
-						<label>$ADDON[plugin.video.vstream 30409]</label>
+						<label>$ADDON[plugin.video.tvwatch 30409]</label>
 						<textcolor>white</textcolor>
 						<shadowcolor>black</shadowcolor>
                         <texturenofocus>nofocus.png</texturenofocus>

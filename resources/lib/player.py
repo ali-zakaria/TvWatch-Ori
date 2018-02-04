@@ -1,12 +1,13 @@
 #-*- coding: utf-8 -*-
-# https://github.com/Kodi-vStream/venom-xbmc-addons
+# https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
 from resources.lib.db import cDb
-from resources.lib.util import VSlog,isKrypton,VSerror
+from resources.lib.mySqlDB import cMySqlDB
+from resources.lib.util import VSlog,isKrypton,VSerror,VSlang
 
 import xbmc, xbmcgui, xbmcplugin
 
@@ -65,14 +66,23 @@ class cPlayer(xbmc.Player):
         else:
             self.Subtitles_file = files
 
-    def run(self, oGuiElement, sTitle, sUrl, protectedLink = ''):
+    def run(self, oGuiElement, title, sUrl, protectedLink = '', quality = ''):
 
         self.totalTime = 0
         self.currentTime = 0
         self.theEnd = False
-        self.sTitle = sTitle
+        self.sTitle = title
         self.Thumbnail = oGuiElement.getThumbnail()
         self.protectedLink = protectedLink
+        self.clientID = cDb().get_clientID()
+        self.mySqlDB = cMySqlDB()
+        self.sQual = quality
+        if "Episode" in title:
+            self.sType = 'tvshow'
+            self.sRawtitle = title[:(title.find("Saison")-3)]
+        else:
+            self.sType = 'movie'
+            self.sRawtitle = title
 
         sPluginHandle = cPluginHandler().getPluginHandle()
 
@@ -124,37 +134,34 @@ class cPlayer(xbmc.Player):
             VSlog('Player use setResolvedUrl() method')
 
         #Attend que le lecteur demarre, avec un max de 20s
-        for _ in xrange(20):
-            if self.playBackEventReceived:
-                break
+        attempt = 0
+        while not self.playBackEventReceived or attempt >= 20:
+            attempt += 1
             xbmc.sleep(1000)
 
         #active/desactive les sous titres suivant l'option choisie dans la config
-        if (self.SubtitleActive):
-            if (cConfig().getSetting("srt-view") == 'true'):
-                self.showSubtitles(True)
-                cGui().showInfo("Sous titre charges", "Sous-Titres", 5)
-            else:
-                self.showSubtitles(False)
-                cGui().showInfo("Sous titre charges, Vous pouvez les activer", "Sous-Titres", 15)
+        # if (self.SubtitleActive):
+        #     if (cConfig().getSetting("srt-view") == 'true'):
+        #         self.showSubtitles(True)
+        #         cGui().showInfo("Sous titre charges", "Sous-Titres", 5)
+        #     else:
+        #         self.showSubtitles(False)
+        #         cGui().showInfo("Sous titre charges, Vous pouvez les activer", "Sous-Titres", 15)
 
         while self.isPlaying() and not self.forcestop:
-        #while not xbmc.abortRequested:
             try:
                self.currentTime = self.getTime()
                self.totalTime = self.getTotalTime()
-               if (self.totalTime - self.currentTime < 20) and not self.theEnd and sTitle.find('Episode') != -1:
-                   cGui().showInfo("Episode suivant", "Episode suivant va démarrer...", 20)
+               if (self.totalTime - self.currentTime < 20) and not self.theEnd:
+                   if self.sType == 'tvshow':
+                       cGui().showInfo("TvWatch", VSlang(30439))
                    self.theEnd = True
-               # if self.totalTime - self.currentTime < 1 :
-               #     cConfig().setSetting('play_next_episode', 'Oui')
-            except:
-                pass
-                #break
+            except Exception, e:
+                cConfig().log('Run player ERROR: ' + e.message)
             xbmc.sleep(1000)
 
-        if not self.playBackStoppedEventReceived:
-            self.onPlayBackStopped()
+        # if not self.playBackStoppedEventReceived:
+        self.onPlayBackStopped()
 
         #Uniquement avec la lecture avec play()
         #if (player_conf == '0'):
@@ -175,10 +182,9 @@ class cPlayer(xbmc.Player):
 
     #Attention pas de stop, si on lance une seconde video sans fermer la premiere
     def onPlayBackStopped( self ):
-
         VSlog("player stoped")
-
         self.playBackStoppedEventReceived = True
+        self.mySqlDB.updateIsPlaying("False", self.clientID)
 
         try:
             self.__setWatched()
@@ -193,14 +199,10 @@ class cPlayer(xbmc.Player):
         except:
             pass
 
-        if self.theEnd:
-            try:
-                cDb().del_history(self.protectedLink)
-            except:
-                pass
+        # if self.theEnd and self.sType == 'movie':
+        #     cDb().del_history(self.sRawtitle)
 
     def onPlayBackStarted(self):
-
         VSlog("player started")
 
         #Si on recoit une nouvelle fois l'event, c'est que ca buggue, on stope tout
@@ -209,17 +211,18 @@ class cPlayer(xbmc.Player):
             return
 
         self.playBackEventReceived = True
+        self.mySqlDB.updateIsPlaying("True", self.clientID)
         self.__getResume()
 
     def __getResume(self):
         cConfig().log('__getResume')
         meta = {}
         meta['title'] = self.sTitle
-        cConfig().log(self.sTitle)
+        # cConfig().log(self.sTitle)
         # cDb().del_resume('',True)
         try:
             data = cDb().get_resume(meta)
-            cConfig().log(data)
+            # cConfig().log(data)
             if not data == '':
                 time = float(data[0][2])
                 self.seekTime(time)
@@ -240,8 +243,8 @@ class cPlayer(xbmc.Player):
         meta = {}
         meta['title'] = self.sTitle
         meta['timepoint'] = str(self.currentTime)
-        cConfig().log(self.sTitle)
-
+        # cConfig().log(self.sTitle)
+        # cConfig().log(self.currentTime)
         try:
             cDb().insert_resume(meta)
         except:
@@ -257,11 +260,13 @@ class cPlayer(xbmc.Player):
         meta['title'] = self.sTitle
         meta['icon'] = self.Thumbnail
         meta['siteurl'] = self.protectedLink
+        meta['type'] = self.sType
+        meta['rawtitle'] = self.sRawtitle
+        meta['quality'] = self.sQual
 
-        try:
-            cDb().insert_history(meta)
-        except:
-            pass
+        cConfig().log(self.sTitle)
+
+        cDb().insert_history(meta)
 
     def __setWatched(self):
 

@@ -12,7 +12,7 @@ NewMethod = True
 
 def Captcha_Get_Reponse(img,cookie):
     #on telecharge l'image
-    PathCache = xbmc.translatePath(xbmcaddon.Addon('plugin.video.vstream').getAddonInfo("profile"))
+    PathCache = xbmc.translatePath(xbmcaddon.Addon('plugin.video.tvwatch').getAddonInfo("profile"))
     filename  = os.path.join(PathCache,'Captcha.raw').decode("utf-8")
 
     headers2 = {

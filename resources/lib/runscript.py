@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from config import cConfig
 
 import xbmc, xbmcgui, xbmcaddon
@@ -42,31 +42,31 @@ class cClear:
 
         elif (env == 'changelog'):
             try:
-                sUrl = 'https://raw.githubusercontent.com/Kodi-vStream/venom-xbmc-addons/master/plugin.video.vstream/changelog.txt'
+                sUrl = 'https://raw.githubusercontent.com/Kodi-TvWatch/primatech-xbmc-addons/master/plugin.video.tvwatch/changelog.txt'
                 oRequest =  urllib2.Request(sUrl)
                 oResponse = urllib2.urlopen(oRequest)
                 sContent = oResponse.read()
                 from about import cAbout
-                cAbout().TextBoxes('vStream Changelog', sContent)
+                cAbout().TextBoxes('TvWatch Changelog', sContent)
             except:
                 cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
             return
 
         elif (env == 'soutient'):
             try:
-                sUrl = 'https://raw.githubusercontent.com/Kodi-vStream/venom-xbmc-addons/master/plugin.video.vstream/soutient.txt'
+                sUrl = 'https://raw.githubusercontent.com/Kodi-TvWatch/primatech-xbmc-addons/master/plugin.video.tvwatch/soutient.txt'
                 oRequest =  urllib2.Request(sUrl)
                 oResponse = urllib2.urlopen(oRequest)
                 sContent = oResponse.read()
                 from about import cAbout
-                cAbout().TextBoxes('vStream Soutient', sContent)
+                cAbout().TextBoxes('TvWatch Soutient', sContent)
             except:
                 cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
             return
 
         elif (env == 'addon'):
             dialog = xbmcgui.Dialog()
-            if dialog.yesno('vStream', 'Êtes-vous sûr ?','','','Non', 'Oui'):
+            if dialog.yesno('TvWatch', 'Êtes-vous sûr ?','','','Non', 'Oui'):
 
                 #cached_fav = cConfig().getFileFav()
                 #cached_DB = cConfig().getFileDB()
@@ -113,14 +113,14 @@ class cClear:
 
         elif (env == 'xbmc'):
             dialog = xbmcgui.Dialog()
-            if dialog.yesno('vStream', 'Êtes-vous sûr ?','','','Non', 'Oui'):
+            if dialog.yesno('TvWatch', 'Êtes-vous sûr ?','','','Non', 'Oui'):
                 self.ClearDir(VStranslatePath('special://temp/'),True)
                 xbmc.executebuiltin("XBMC.Notification(Clear XBMC Cache,Successful,5000,"")")
             return
 
         elif (env == 'fi'):
             dialog = xbmcgui.Dialog()
-            if dialog.yesno('vStream', 'Êtes-vous sûr ?','','','Non', 'Oui'):
+            if dialog.yesno('TvWatch', 'Êtes-vous sûr ?','','','Non', 'Oui'):
                 xbmc.executebuiltin("XBMC.Notification(Clear .fi Files ,Successful,2000,"")")
                 path = VStranslatePath('special://temp/')
                 filenames = next(os.walk(path))[2]
@@ -131,7 +131,7 @@ class cClear:
 
         elif (env == 'uplog'):
             dialog = xbmcgui.Dialog()
-            if dialog.yesno('vStream', 'Êtes-vous sûr ?','','','Non', 'Oui'):
+            if dialog.yesno('TvWatch', 'Êtes-vous sûr ?','','','Non', 'Oui'):
                 path = VStranslatePath('special://logpath/')
                 UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'
                 headers = { 'User-Agent' : UA }
@@ -159,7 +159,7 @@ class cClear:
         elif (env == 'search'):
 
             from resources.lib.handler.pluginHandler import cPluginHandler
-            valid = '[COLOR green][x][/COLOR]'
+            valid = '[COLOR khaki][x][/COLOR]'
 
 
 
@@ -253,7 +253,7 @@ class cClear:
 
         elif (env == 'thumb'):
             dialog = xbmcgui.Dialog()
-            if dialog.yesno('vStream', 'Êtes-vous sûr ? Ceci effacera toutes les thumbnails ','','','Non', 'Oui'):
+            if dialog.yesno('TvWatch', 'Êtes-vous sûr ? Ceci effacera toutes les thumbnails ','','','Non', 'Oui'):
                 xbmc.executebuiltin("XBMC.Notification(Clear Thumbnails ,Successful,2000,"")")
                 path = VStranslatePath('special://userdata/Thumbnails/')
                 path2 = VStranslatePath('special://userdata/Database/')

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 
 import re,urllib2,urllib
 import xbmc

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.player import cPlayer
@@ -54,8 +54,9 @@ class cShowBA:
                 oPlayer.addItemToPlaylist(oGuiElement)
                 oPlayer.startPlayer()
 
-            except:
-                util.VSshowInfo('Vstream',util.VSlang(30204))
+            except Exception, e:
+                util.VSshowInfo('TvWatch',util.VSlang(30204))
+                util.VSlog("SearchBA ERROR " + e.message)
                 return
             return
 

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 from resources.lib.db import cDb
 
@@ -16,8 +16,8 @@ class cGuiElement:
         self.__sMeta = 0
         self.__sPlaycount = 0
         self.__sTrailerUrl = ''
-        self.__sMetaAddon = cConfig().getSetting('meta-view')
-        #self.__sMetaAddon = True
+        #self.__sMetaAddon = cConfig().getSetting('meta-view')
+        self.__sMetaAddon = 'true'
         self.__sImdb = ''
         self.__sTmdb = ''
         self.__sMediaUrl = ''
@@ -82,6 +82,7 @@ class cGuiElement:
 
     def setShowMeta(self, sMeta):
         self.__ShowMeta = sMeta
+
     def getShowMeta(self):
         return self.__ShowMeta
 
@@ -526,7 +527,8 @@ class cGuiElement:
 
         if sType:
             from resources.lib.tmdb import cTMDb
-            grab = cTMDb(api_key=cConfig().getSetting('api_tmdb'))
+            # grab = cTMDb(api_key=cConfig().getSetting('api_tmdb'))
+            # grab = cTMDb()
             args = (sType, self.__sFileName)
             kwargs = {}
             if (self.__ImdbId):
@@ -539,7 +541,7 @@ class cGuiElement:
                 kwargs['season'] =  self.__Season
             if (self.__Episode):
                 kwargs['episode'] =  self.__Episode
-            meta = grab.get_meta(*args, **kwargs)
+            meta = cTMDb().get_meta(*args, **kwargs)
 
         else :
             return
@@ -587,7 +589,7 @@ class cGuiElement:
 
         #self.addItemProperties('fanart_image', self.__sFanart)
 
-         # - Video Values:
+        # - Video Values:
         # - genre : string (Comedy)
         # - year : integer (2009)
         # - episode : integer (4)
@@ -625,8 +627,14 @@ class cGuiElement:
         # - dateadded : string (Y-m-d h:m:s = 2009-04-05 23:16:04)
 
 
-        if self.getMeta() > 0 and self.getMetaAddon() == 'true':
+        if self.getMeta() > 0 and self.getShowMeta():
             self.getMetadonne()
+            if self.__aItemValues['genre']:
+                additionalInfos = "[B]Rating : [/B]" + str(self.__aItemValues['rating']) + "\n"
+                additionalInfos += "[B]Year : [/B]" + str(self.__aItemValues['year']) + "\n"
+                additionalInfos += "[B]Duration : [/B]" + str(self.__aItemValues['duration']) + " min\n"
+                additionalInfos += "[B]Genre : [/B]" + self.__aItemValues['genre'] + "\n"
+                self.__aItemValues['plot'] = additionalInfos + self.__aItemValues['plot']
         return self.__aItemValues
 
     def addItemProperties(self, sPropertyKey, mPropertyValue):

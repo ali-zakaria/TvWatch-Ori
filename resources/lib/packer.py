@@ -1,5 +1,5 @@
 #
-# Modified version From https://github.com/Kodi-vStream/venom-xbmc-addons
+# Modified version From https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 #
 # Unpacker for Dean Edward's p.a.c.k.e.r, a part of javascript beautifier

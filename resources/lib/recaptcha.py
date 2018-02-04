@@ -14,7 +14,7 @@ import base64
 import xbmc
 import xbmcgui,xbmcaddon,os
 
-__addon__ = xbmcaddon.Addon('plugin.video.vstream')
+__addon__ = xbmcaddon.Addon('plugin.video.tvwatch')
 __sLang__ = 'fr'
 
 class cInputWindow(xbmcgui.WindowDialog):

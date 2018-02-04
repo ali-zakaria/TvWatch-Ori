@@ -20,7 +20,7 @@ import xbmc
 
 # try:
 #     import StorageServer
-#     Memorise = StorageServer.StorageServer("VstreamDownloader")
+#     Memorise = StorageServer.StorageServer("TvWatchDownloader")
 # except:
 #     print 'Le download ne marchera pas correctement'
 
@@ -82,7 +82,7 @@ class cDownloadProgressBar(threading.Thread):
         #diag.isFinished()
 
         xbmcgui.Window(10101).setProperty('arret', '0')
-        #self.Memorise.set("VstreamDownloaderWorking", "1")
+        #self.Memorise.set("TvWatchDownloaderWorking", "1")
 
         headers = self.oUrlHandler.info()
 
@@ -97,7 +97,7 @@ class cDownloadProgressBar(threading.Thread):
 
         #mise a jour pour info taille
         self.__updatedb(TotDown,iTotalSize)
-        cConfig().showInfo('vStream', 'Téléchargement Démarré')
+        cConfig().showInfo('TvWatch', 'Téléchargement Démarré')
 
         while not (self.processIsCanceled or diag.isFinished()):
 
@@ -111,7 +111,7 @@ class cDownloadProgressBar(threading.Thread):
             self.__updatedb(TotDown,iTotalSize)
 
             self.__stateCallBackFunction(TotDown, iTotalSize)
-            #if self.Memorise.get("VstreamDownloaderWorking") == "0":
+            #if self.Memorise.get("TvWatchDownloaderWorking") == "0":
             #    self.processIsCanceled = True
             if xbmcgui.Window(10101).getProperty('arret') == '1':
                 self.processIsCanceled = True
@@ -126,7 +126,7 @@ class cDownloadProgressBar(threading.Thread):
 
         #On autorise le prochain DL
         #????????????????
-        #Memorise.unlock("VstreamDownloaderLock")
+        #Memorise.unlock("TvWatchDownloaderLock")
 
         #fait une pause pour fermer le Dialog
         xbmc.sleep(900)
@@ -223,7 +223,7 @@ class cDownloadProgressBar(threading.Thread):
             cConfig().showInfo('Erreur initialisation', 'Download error')
             return
 
-        # if not Memorise.lock("VstreamDownloaderLock"):
+        # if not Memorise.lock("TvWatchDownloaderLock"):
         #     cConfig().showInfo('Telechargements deja demarrés', 'Download error')
         #     return
 
@@ -243,7 +243,7 @@ class cDownloadProgressBar(threading.Thread):
     def StopAll(self):
 
         self.processIsCanceled = True
-        #Memorise.unlock("VstreamDownloaderLock")
+        #Memorise.unlock("TvWatchDownloaderLock")
         #Memorise.set('SimpleDownloaderQueue', '0')
         xbmcgui.Window(10101).setProperty('SimpleDownloaderQueue', '0')
 
@@ -284,7 +284,7 @@ class cDownload:
 
     def isDownloading_old(self):
 
-        if not Memorise.get('VstreamDownloaderLock'):
+        if not Memorise.get('TvWatchDownloaderLock'):
             return False
         return True
 
@@ -308,7 +308,7 @@ class cDownload:
         oHoster = cHosterGui().checkHoster(sDBUrl)
         oHoster.setUrl(sDBUrl)
         aLink = oHoster.getMediaLink()
-        #aLink = (True,'https://github.com/LordVenom/venom-xbmc-addons-beta/blob/master/plugin.video.vstream/Thumbs.db?raw=true')
+        #aLink = (True,'https://github.com/LordPrimatech/primatech-xbmc-addons-beta/blob/master/plugin.video.tvwatch/Thumbs.db?raw=true')
 
         if (aLink[0] == True):
             sUrl = aLink[1]
@@ -398,7 +398,7 @@ class cDownload:
 
         try:
             cDb().clean_download()
-            cConfig().showInfo('vStream', 'Liste mise a jour')
+            cConfig().showInfo('TvWatch', 'Liste mise a jour')
             #cConfig().update()
         except:
             pass
@@ -424,7 +424,7 @@ class cDownload:
 
         try:
             cDb().reset_download(meta)
-            cConfig().showInfo('vStream', 'Liste mise a jour')
+            cConfig().showInfo('TvWatch', 'Liste mise a jour')
             cConfig().update()
         except:
             pass
@@ -465,10 +465,10 @@ class cDownload:
             try:
                 cDb().del_download(meta)
                 xbmcvfs.delete(path)
-                cConfig().showInfo('vStream', 'Fichier supprimé')
+                cConfig().showInfo('TvWatch', 'Fichier supprimé')
                 cConfig().update()
             except:
-                cConfig().showInfo('vStream', 'Erreur, fichier non supprimable')
+                cConfig().showInfo('TvWatch', 'Erreur, fichier non supprimable')
 
     def GetNextFile(self):
         row = cDb().get_Download()
@@ -584,7 +584,7 @@ class cDownload:
             elif status == '1':
                 sStatus='[COLOR=red][En cours] [/COLOR]'
             elif status == '2':
-                sStatus='[COLOR=green][Fini] [/COLOR]'
+                sStatus='[COLOR=khaki][Fini] [/COLOR]'
 
             if size:
                 sTitle = sStatus + title + ' (' + self.__formatFileSize(size)+'/'+self.__formatFileSize(totalsize)+')'
@@ -627,7 +627,7 @@ class cDownload:
 
         try:
             cDb().del_download(meta)
-            cConfig().showInfo('vStream', 'Liste mise a jour')
+            cConfig().showInfo('TvWatch', 'Liste mise a jour')
             cConfig().update()
         except:
             pass

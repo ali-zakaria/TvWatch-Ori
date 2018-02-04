@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 from resources.lib.db import cDb
 from resources.lib.util import cUtil
@@ -68,7 +68,7 @@ class cTrakt:
         if (total > 0):
             #self.__Token  = result['token']
             sText = (cConfig().getlanguage(30304)) % (result['verification_url'], result['user_code'])
-            dialog = cConfig().createDialog('vStream')
+            dialog = cConfig().createDialog('TvWatch')
             dialog.update(0, sText)
 
             for i in range(0, result['expires_in']):
@@ -654,9 +654,9 @@ class cTrakt:
         oGuiElement.setImdbId(sImdb)
         oGuiElement.setTmdbId(sTmdb)
 
-        if cConfig().getSetting("meta-view") == 'false':
-            #self.getTmdbInfo(sTmdb, oGuiElement)
-            oGuiElement.setMetaAddon('true')
+        # if cConfig().getSetting("meta-view") == 'false':
+        #     #self.getTmdbInfo(sTmdb, oGuiElement)
+        #     oGuiElement.setMetaAddon('true')
 
         #xbmc.log(str(cTrakt.CONTENT))
         if cTrakt.CONTENT == '2':
@@ -851,7 +851,7 @@ class cTrakt:
 
         sMovieTitle = re.sub('\(.+?\)',' ', sMovieTitle) #vire les tags entre parentheses
 
-        #modif venom si le titre comporte un - il doit le chercher
+        #modif primatech si le titre comporte un - il doit le chercher
         sMovieTitle = re.sub(r'[^a-z -]', ' ', sMovieTitle) #vire les caracteres a la con qui peuvent trainer
 
         sMovieTitle = re.sub('( |^)(le|la|les|du|au|a|l)( |$)',' ', sMovieTitle) #vire les articles
@@ -860,17 +860,17 @@ class cTrakt:
 
 
         dialog3 = xbmcgui.Dialog()
-        ret = dialog3.select('Selectionner un Moteur de Recherche',['Vstream (Fiable mais plus complexe)','Alluc (Simple mais resultats non garantis)'])
+        ret = dialog3.select('Selectionner un Moteur de Recherche',['TvWatch (Fiable mais plus complexe)','Alluc (Simple mais resultats non garantis)'])
 
         if ret == 0:
-            self.VstreamSearch(sMovieTitle)
+            self.TvWatchSearch(sMovieTitle)
         elif ret == 1:
             #AllucSearch(sMovieTitle + sExtraTitle)
             #modif test préfére les accent supprimer é = e
             sMovieTitle = sMovieTitle.replace('%C3%A9','e').replace('%C3%A0','a')
             self.AllucSearch(sMovieTitle)
 
-    def VstreamSearch(self, sMovieTitle):
+    def TvWatchSearch(self, sMovieTitle):
         oGui = cGui()
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
@@ -943,7 +943,8 @@ class cTrakt:
         oInputParameterHandler = cInputParameterHandler()
 
         from resources.lib.tmdb import cTMDb
-        grab = cTMDb(api_key=cConfig().getSetting('api_tmdb'))
+        # grab = cTMDb(api_key=cConfig().getSetting('api_tmdb'))
+        grab = cTMDb()
 
         if sType == 'show' or sType == 'shows':
             sType = 'tv'

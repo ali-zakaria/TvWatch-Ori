@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
@@ -33,43 +33,43 @@ class cHome:
 
         if (oConfig.getSetting('home_update') == 'true'):
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
             oGui.addDir(SITE_IDENTIFIER, 'showUpdate', util.VSlang(30418), 'update.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showSearchText', util.VSlang(30076), 'search.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('themoviedb_org', 'load', util.VSlang(30088), 'searchtmdb.png', oOutputParameterHandler)
 
         # oOutputParameterHandler = cOutputParameterHandler()
-        # oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        # oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         # oGui.addDir('freebox', 'load', oConfig.getlanguage(30115), 'tv.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('freebox', 'load', util.VSlang(30115), 'tv.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showReplay', util.VSlang(30117), 'replay.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30120), 'films.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showSeries', util.VSlang(30121), 'series.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showAnimes', util.VSlang(30122), 'animes.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showDocs', util.VSlang(30112), 'doc.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
@@ -77,38 +77,38 @@ class cHome:
         oGui.addDir(SITE_IDENTIFIER, 'callpluging', util.VSlang(30113), 'sport.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir(SITE_IDENTIFIER, 'showNets', util.VSlang(30114), 'buzz.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('cTrakt', 'getLoad', util.VSlang(30214), 'trakt.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('cDownload', 'getDownload', util.VSlang(30202), 'download.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('cLibrary', 'getLibrary', util.VSlang(30300), 'library.png', oOutputParameterHandler)
 
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('cFav', 'getFavourites', util.VSlang(30207), 'mark.png', oOutputParameterHandler)
 
-        if (oConfig.getSetting("history-view") == 'true'):
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
-            oGui.addDir('cHome', 'showHistory', util.VSlang(30308), 'annees.png', oOutputParameterHandler)
+        # if (oConfig.getSetting("history-view") == 'true'):
+        #     oOutputParameterHandler = cOutputParameterHandler()
+        #     oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
+        #     oGui.addDir('cHome', 'showHistory', util.VSlang(30308), 'annees.png', oOutputParameterHandler)
 
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oGui.addDir('globalSources', 'showSources', util.VSlang(30138), 'host.png', oOutputParameterHandler)
 
         # oOutputParameterHandler = cOutputParameterHandler()
-        # oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        # oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         # oGui.addDir('globalParametre', 'showSources', '[COLOR teal]'+oConfig.getlanguage(30023)+'[/COLOR]', 'param.png', oOutputParameterHandler)
 
 
@@ -312,7 +312,7 @@ class cHome:
         aPlugins = oPluginHandler.getAvailablePlugins()
         for aPlugin in aPlugins:
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
             icon = 'sites/%s.png' % (aPlugin[1])
             oGui.addDir(aPlugin[1], 'load', aPlugin[0], icon, oOutputParameterHandler)
 
@@ -327,7 +327,7 @@ class cHome:
         else :
             return False
         # oOutputParameterHandler = cOutputParameterHandler()
-        # oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        # oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         # oOutputParameterHandler.addParameter('searchtext', sSearchText)
         # oOutputParameterHandler.addParameter('disp', sDisp)
         # oOutputParameterHandler.addParameter('type', sType)
@@ -353,7 +353,7 @@ class cHome:
         #utilisation de guielement pour ajouter la bonne catégories
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oOutputParameterHandler.addParameter('searchtext', searchtext)
 
         oGuiElement = cGuiElement()
@@ -370,7 +370,7 @@ class cHome:
         oGui.addFolder(oGuiElement, oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oOutputParameterHandler.addParameter('searchtext', searchtext)
 
         oGuiElement = cGuiElement()
@@ -387,7 +387,7 @@ class cHome:
         oGui.addFolder(oGuiElement, oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         oOutputParameterHandler.addParameter('searchtext', searchtext)
 
         oGuiElement = cGuiElement()
@@ -404,7 +404,7 @@ class cHome:
         oGui.addFolder(oGuiElement, oOutputParameterHandler)
 
         # oOutputParameterHandler = cOutputParameterHandler()
-        # oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+        # oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
         # oOutputParameterHandler.addParameter('searchtext', searchtext)
         # oOutputParameterHandler.addParameter('disp', 'search10')
         # oOutputParameterHandler.addParameter('readdb', 'True')
@@ -432,7 +432,7 @@ class cHome:
                 oOutputParameterHandler.addParameter('type', type)
                 xbmcgui.Window(10101).setProperty('search_type', type)
 
-            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
             oOutputParameterHandler.addParameter('searchtext', match[1])
             #oOutputParameterHandler.addParameter('disp', match[2])
             #oOutputParameterHandler.addParameter('readdb', 'False')
@@ -451,7 +451,7 @@ class cHome:
         if row:
 
             oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', 'http://venom')
+            oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
             oGui.addDir(SITE_IDENTIFIER, 'delSearch', oConfig.getlanguage(30413), 'search.png', oOutputParameterHandler)
 
 

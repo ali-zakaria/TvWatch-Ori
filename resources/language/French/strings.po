@@ -1,6 +1,6 @@
-# Addon Name: vStream
-# Addon id: plugin.video.vstream
-# Addon Provider: vStream
+# Addon Name: TvWatch
+# Addon id: plugin.video.tvwatch
+# Addon Provider: TvWatch
 msgid ""
 msgstr ""
 
@@ -25,8 +25,8 @@ msgid "Filter Error"
 msgstr "Erreur du filtre"
 
 msgctxt "#30005"
-msgid "VStream will be faster with your own API key."
-msgstr "vStream sera plus rapide avec votre propre clef API."
+msgid "TvWatch will be faster with your own API key."
+msgstr "TvWatch sera plus rapide avec votre propre clef API."
 
 msgctxt "#30006"
 msgid "Search Metadata (slowed the Addon)"
@@ -402,8 +402,8 @@ msgid "[COLOR khaki]Click here to login[/COLOR]"
 msgstr "[COLOR khaki]Cliquez ici, pour vous connecter[/COLOR]"
 
 msgctxt "#30306"
-msgid "[COLOR khaki]Hello, %s[/COLOR]"
-msgstr "[COLOR khaki][COLOR khaki]Bonjour, %s[/COLOR]"
+msgid "[B]Hello %s ![/B]"
+msgstr "[B]Bonjour %s ![/B]"
 
 msgctxt "#30307"
 msgid "Movie (%s/%s) watch / Show watch (%s) / episode (%s/%s) watch"
@@ -570,8 +570,8 @@ msgid "[COLOR orange]Search on Alluc_ee[/COLOR]"
 msgstr "[COLOR orange]Recherche sur Alluc_ee[/COLOR]"
 
 msgctxt "#30418"
-msgid "[COLOR green]Update available[/COLOR]"
-msgstr "[COLOR green]Mise à jour disponible[/COLOR]"
+msgid "[COLOR khaki]Update available[/COLOR]"
+msgstr "[COLOR khaki]Mise à jour disponible[/COLOR]"
 
 msgctxt "#30419"
 msgid "View: Visual search (recommended 500)"
@@ -586,8 +586,8 @@ msgid "Please enter your code"
 msgstr "Entrez votre code SVP"
 
 msgctxt "#30422"
-msgid "VStream code"
-msgstr "VStream code"
+msgid "TvWatch code"
+msgstr "TvWatch code"
 
 msgctxt "#30423"
 msgid "My List"
@@ -644,3 +644,27 @@ msgstr "Dessins Animés VF"
 msgctxt "#30436"
 msgid "VOSTFR Cartoons"
 msgstr "Dessins Animés VOSTFR"
+
+msgctxt "#30437"
+msgid "Code is already in use"
+msgstr "Code en cours d'utilisation"
+
+msgctxt "#30438"
+msgid "No search results"
+msgstr "Aucun résultat de recherche"
+
+msgctxt "#30439"
+msgid "Next episode in 20 seconds"
+msgstr "Prochain épisode dans 20 secondes"
+
+msgctxt "#30440"
+msgid "Remove from this list"
+msgstr "Supprimer de cette liste"
+
+msgctxt "#30441"
+msgid "Add to my list"
+msgstr "Ajouter à ma liste"
+
+msgctxt "#30442"
+msgid "Your code expires in [B][COLOR khaki]%s[/COLOR][/B] days"
+msgstr "Votre code expire dans [B][COLOR khaki]%s[/COLOR][/B] jours"

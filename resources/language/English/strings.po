@@ -1,6 +1,6 @@
-# Addon Name: vStream
-# Addon id: plugin.video.vstream
-# Addon Provider: vStream
+# Addon Name: TvWatch
+# Addon id: plugin.video.tvwatch
+# Addon Provider: TvWatch
 msgid ""
 msgstr ""
 
@@ -25,7 +25,7 @@ msgid "Filter Error"
 msgstr ""
 
 msgctxt "#30005"
-msgid "VStream will be faster with your own API key."
+msgid "TvWatch will be faster with your own API key."
 msgstr ""
 
 msgctxt "#30006"
@@ -402,7 +402,7 @@ msgid "[COLOR khaki]Click here to login[/COLOR]"
 msgstr ""
 
 msgctxt "#30306"
-msgid "[COLOR khaki]Hello, %s[/COLOR]"
+msgid "[B]Hello %s ![/B]"
 msgstr ""
 
 msgctxt "#30307"
@@ -569,7 +569,7 @@ msgid "[COLOR orange]Search on Alluc_ee[/COLOR]"
 msgstr ""
 
 msgctxt "#30418"
-msgid "[COLOR green]Update available[/COLOR]"
+msgid "[COLOR khaki]Update available[/COLOR]"
 msgstr ""
 
 msgctxt "#30419"
@@ -585,7 +585,7 @@ msgid "Please enter your code"
 msgstr ""
 
 msgctxt "#30022"
-msgid "VStream code"
+msgid "TvWatch code"
 msgstr ""
 
 msgctxt "#30423"
@@ -642,4 +642,28 @@ msgstr ""
 
 msgctxt "#30436"
 msgid "VOSTFR Cartoons"
+msgstr ""
+
+msgctxt "#30437"
+msgid "Code is already in use"
+msgstr ""
+
+msgctxt "#30438"
+msgid "No search results"
+msgstr ""
+
+msgctxt "#30439"
+msgid "Next episode in 20 seconds"
+msgstr ""
+
+msgctxt "#30440"
+msgid "Remove from this list"
+msgstr ""
+
+msgctxt "#30441"
+msgid "Add to my list"
+msgstr ""
+
+msgctxt "#30442"
+msgid "Your code expires in [B][COLOR khaki]%s[/COLOR][/B] days"
 msgstr ""

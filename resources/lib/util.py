@@ -269,7 +269,7 @@ def QuoteSafe(sUrl):
     return urllib.quote(sUrl,safe=':/')
 
 def VSlog(e):
-    xbmc.log('\t[PLUGIN] Vstream: '+str(e), xbmc.LOGNOTICE)
+    xbmc.log('\t[PLUGIN] TvWatch: '+str(e), xbmc.LOGNOTICE)
 
 def VSupdate(self):
     xbmc.executebuiltin("Container.Refresh")
@@ -284,12 +284,12 @@ def VS_hide_busy_dialog():
 
 def VScreateDialogOK(label):
     oDialog = xbmcgui.Dialog()
-    oDialog.ok('vStream', label)
+    oDialog.ok('TvWatch', label)
     return oDialog
 
 def VScreateDialogYesNo(label):
     oDialog = xbmcgui.Dialog()
-    qst = oDialog.yesno("vStream", label)
+    qst = oDialog.yesno("TvWatch", label)
     return qst
 
 def VScreateDialogSelect(label,sTitle=''):
@@ -343,7 +343,7 @@ def updateDialogSearch(dialog, total, site):
     dialog.update(iPercent, 'Chargement: '+str(site))
 
 def VSerror(e):
-    xbmcgui.Dialog().notification('Vstream','Erreur: '+str(e),xbmcgui.NOTIFICATION_ERROR,2000)
+    xbmcgui.Dialog().notification('TvWatch','Erreur: '+str(e),xbmcgui.NOTIFICATION_ERROR,2000)
     VSlog('Erreur: ' + str(e))
 
 def VSshowInfo(sTitle, sDescription, iSeconds=0,sound = True):
@@ -361,7 +361,7 @@ def VSshowInfo(sTitle, sDescription, iSeconds=0,sound = True):
 def VStranslatePathAddon(location):
     #Note, location = (author,changelog,description,disclaimer,fanart,icon,id,name,path,profile,stars,summary,type,version)
     #ex util.VStranslatePathAddon("profile")
-    return xbmc.translatePath(xbmcaddon.Addon('plugin.video.vstream').getAddonInfo(location)).decode("utf-8")
+    return xbmc.translatePath(xbmcaddon.Addon('plugin.video.tvwatch').getAddonInfo(location)).decode("utf-8")
 
 def VStranslatePath(location):
     #ex util.VStranslatePath("special://logpath/") > http://kodi.wiki/view/Special_protocol
@@ -369,8 +369,8 @@ def VStranslatePath(location):
 
 def VSlang(lang):
     #util.VSlang(30003)
-    #Bug avec accent return xbmc.translatePath(xbmcaddon.Addon('plugin.video.vstream').getLocalizedString(lang)).decode("utf-8")
-    return xbmc.translatePath(xbmcaddon.Addon('plugin.video.vstream').getLocalizedString(lang))
+    #Bug avec accent return xbmc.translatePath(xbmcaddon.Addon('plugin.video.tvwatch').getLocalizedString(lang)).decode("utf-8")
+    return xbmc.translatePath(xbmcaddon.Addon('plugin.video.tvwatch').getLocalizedString(lang))
 
 def VSshowYear(sUrl,start = '',end = '',endswithslash = ''):
     if start and end:

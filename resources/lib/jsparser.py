@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*- 
 #
 #
-# Vstream https://github.com/Kodi-vStream/venom-xbmc-addons
+# TvWatch https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 #****************************************************************************************************************************
 # TinyJSParser https://github.com/TmpName/TinyJSParser
 #
-# A basic JS interpreter in python, made for the Kodi addon Vstream https://github.com/Kodi-vStream/venom-xbmc-addons
+# A basic JS interpreter in python, made for the Kodi addon TvWatch https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 #
 #****************************************************************************************************************************
 

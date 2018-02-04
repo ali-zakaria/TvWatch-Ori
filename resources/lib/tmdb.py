@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #Code de depart par AnthonyBloomer
-#Modif pour vStream
+#Modif pour TvWatch
 
 from resources.lib.config import cConfig
 
@@ -22,12 +22,12 @@ except:
 class cTMDb:
     URL = "http://api.themoviedb.org/3/"
 
-    def __init__(self, api_key, debug=False, lang='fr'):
+    def __init__(self, api_key = "92ab39516970ab9d86396866456ec9b6", debug=False, lang='fr'):
         self.api_key = api_key
         self.debug = debug
         self.lang = lang
-        self.poster = 'https://image.tmdb.org/t/p/%s' % cConfig().getSetting('poster_tmdb')
-        self.fanart = 'https://image.tmdb.org/t/p/%s'  % cConfig().getSetting('backdrop_tmdb')
+        self.poster = 'https://image.tmdb.org/t/p/%s' % 'w342' #cConfig().getSetting('poster_tmdb')
+        self.fanart = 'https://image.tmdb.org/t/p/%s'  % 'w1280' #cConfig().getSetting('backdrop_tmdb')
         self.cache = cConfig().getFileCache()
 
         try:
@@ -455,7 +455,7 @@ class cTMDb:
             self.db.close()
             cConfig().log('SQL INSERT meta film Successfully')
         except Exception, e:
-            cConfig().log('SQL ERROR INSERT meta film')
+            cConfig().log('SQL ERROR INSERT meta film: ' + e.message)
 
     def _cache_save_season(self, meta, season):
         cConfig().log('_cache_save_season')

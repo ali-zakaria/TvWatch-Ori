@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Venom.
+#Primatech.
 from resources.lib.config import cConfig
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
@@ -60,7 +60,7 @@ class cLibrary:
         sMediaUrl = urllib.quote_plus(sMediaUrl)
         sFileName = urllib.quote_plus(sFileName)
 
-        sLink = 'plugin://plugin.video.vstream/?function=play&site=cHosterGui&sFileName=' + sFileName + '&sMediaUrl=' + sMediaUrl + '&sHosterIdentifier=' + sHosterIdentifier
+        sLink = 'plugin://plugin.video.tvwatch/?function=play&site=cHosterGui&sFileName=' + sFileName + '&sMediaUrl=' + sMediaUrl + '&sHosterIdentifier=' + sHosterIdentifier
 
         sTitle = sFileName
 
@@ -80,7 +80,7 @@ class cLibrary:
                     # os.mkdir(folder)
 
                 self.MakeFile(folder,sTitle,sLink)
-                cConfig().showInfo('vStream', 'Element rajouté a la librairie')
+                cConfig().showInfo('TvWatch', 'Element rajouté a la librairie')
                 #xbmc.executebuiltin('UpdateLibrary(video, '+ folder + ')')
             except:
                 cConfig().showInfo('Erreur', 'Rajout impossible')
@@ -107,7 +107,7 @@ class cLibrary:
                     os.mkdir(folder2)
 
                 self.MakeFile(folder2,sTitle,sLink)
-                cConfig().showInfo('vStream', 'Element rajouté a la librairie')
+                cConfig().showInfo('TvWatch', 'Element rajouté a la librairie')
                 #xbmc.executebuiltin('UpdateLibrary(video, '+ folder + ')')
             except:
                 cConfig().showInfo('Erreur', 'Rajout impossible')
@@ -120,7 +120,7 @@ class cLibrary:
         f.close()
 
     def getLibrary(self):
-        xbmc.executebuiltin("Container.Update(special://userdata/addon_data/plugin.video.vstream/)")
+        xbmc.executebuiltin("Container.Update(special://userdata/addon_data/plugin.video.tvwatch/)")
         return True
 
 
