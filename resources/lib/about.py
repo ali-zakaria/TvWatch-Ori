@@ -18,6 +18,9 @@ SITE_NAME = 'About'
 
 class cAbout:
 
+    client_id = '85aab916fa0aa0b50a29'
+    client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
+
     #retourne True si les 2 fichiers sont present mais pas avec les meme tailles
     def checksize(self, filepath, size):
         try:
@@ -102,9 +105,7 @@ class cAbout:
         except: import simplejson as json
 
         try:
-            client_id = '85aab916fa0aa0b50a29'
-            client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
-            sRequest = '?client_id=' + client_id + '&client_secret=' + client_secret
+            sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
             sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents'
             oRequestHandler = cRequestHandler(sUrl + sRequest)
             sHtmlContent = oRequestHandler.request()
@@ -128,9 +129,7 @@ class cAbout:
     def checkupdate(self):
         version = cConfig().getAddonVersion()
         try:
-            client_id = '85aab916fa0aa0b50a29'
-            client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
-            sRequest = '?client_id=' + client_id + '&client_secret=' + client_secret
+            sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
             sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/changelog.txt'
             oRequest =  urllib2.Request(sUrl + sRequest)
             oResponse = urllib2.urlopen(oRequest)
@@ -143,7 +142,10 @@ class cAbout:
                     sContent = sContent.replace(" ","")
                     sContent = sContent.replace(".","")
                     newVersion = int(sContent)
-                    if newVersion > int(version.replace(".","")):
+                    currentVersion = int(version.replace(".","")
+                    # cConfig().log("checkupdate New Version :" + str(newVersion))
+                    # cConfig().log("checkupdate Current Version :" + str(currentVersion))
+                    if newVersion > currentVersion):
                         cConfig().setSetting('home_update', str('true'))
                         cConfig().setSetting('service_time', str(datetime.datetime.now()))
                         dialog = cConfig().showInfo("TvWatch", "Mise à jour disponible")
@@ -162,8 +164,9 @@ class cAbout:
         except: import simplejson as json
 
         try:
-            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/addons.xml.md5?client_id=85aab916fa0aa0b50a29&client_secret=3276c40a94a9752510326873f2361e7b80df1a8e'
-            oRequestHandler = cRequestHandler(sUrl)
+            sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
+            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/addons.xml.md5'
+            oRequestHandler = cRequestHandler(sUrl + sRequest)
             sHtmlContent = oRequestHandler.request()
             md5 = json.loads(sHtmlContent)
         except:
