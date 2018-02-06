@@ -74,10 +74,15 @@ class cDb:
         return data
 
     def str_conv2(self, data):
-        data = data.replace(" ", "_")
         data = data.replace("'", "")
         data = data.replace("-", "")
+        data = data.rstrip()
+        data = data.replace(" ", "_")
         return data
+
+    #***********************************
+    #   Resume fonctions
+    #***********************************
 
     def insert_resume(self, meta):
         title = self.str_conv2(meta['title'])
@@ -104,6 +109,30 @@ class cDb:
         except Exception, e:
             cConfig().log('SQL ERROR UPDATE resume: ' + e.message)
 
+    def get_resume(self, meta):
+        title = self.str_conv2(meta['title'])
+        sql_select = "SELECT * FROM resume WHERE title = '%s'" % (title)
+        try:
+            self.dbcur.execute(sql_select)
+            matchedrow = self.dbcur.fetchall()
+            return matchedrow
+        except Exception, e:
+            cConfig().log('SQL ERROR EXECUTE resume: ' + e.message)
+            return []
+
+    def del_resume(self, title):
+        title = self.str_conv2(title)
+        sql_delete = "DELETE FROM resume WHERE title = '%s'" % (title)
+        try:
+            self.dbcur.execute(sql_delete)
+            self.db.commit()
+        except Exception, e:
+            cConfig().log('SQL ERROR DELETE resume: ' + e.message)
+
+    #***********************************
+    #   Watched fonctions
+    #***********************************
+
     def insert_watched(self, meta):
         title = self.str_conv(meta['title'])
         site = urllib.quote_plus(meta['site'])
@@ -113,22 +142,7 @@ class cDb:
             self.db.commit()
             cConfig().log('SQL INSERT watched Successfully')
         except Exception, e:
-            #print ('************* Error attempting to insert into %s cache table: %s ' % (table, e))
             cConfig().log('SQL ERROR INSERT watched: ' + e.message)
-            pass
-        self.db.close()
-
-    def get_resume(self, meta):
-        title = self.str_conv2(meta['title'])
-
-        sql_select = "SELECT * FROM resume WHERE title = '%s'" % (title)
-        try:
-            self.dbcur.execute(sql_select)
-            matchedrow = self.dbcur.fetchall()
-            return matchedrow
-        except Exception, e:
-            cConfig().log('SQL ERROR EXECUTE resume: ' + e.message)
-            return None
 
     def get_watched(self, meta):
         count = 0
@@ -156,22 +170,6 @@ class cDb:
         except Exception, e:
             cConfig().log('SQL ERROR EXECUTE watched: ' + e.message)
             return False, False
-
-    def del_resume(self, title = '', deleteAll = False):
-
-        if title != '':
-            sql_delete = "DELETE FROM resume WHERE title = '%s'" % (title)
-
-        if deleteAll:
-            sql_delete = "DELETE FROM resume;"
-
-        try:
-            self.dbcur.execute(sql_delete)
-            self.db.commit()
-            return
-        except Exception, e:
-            cConfig().log('SQL ERROR DELETE resume: ' + e.message)
-            return
 
     #***********************************
     #   Favoris fonctions
@@ -270,7 +268,6 @@ class cDb:
 
         file(fav_db, "w").write("%r" % watched)
         cConfig().showInfo('Marque-Page', sTitle)
-        #fav_db.close()
 
     #***********************************
     #   Download fonctions
@@ -388,8 +385,11 @@ class cDb:
         siteurl = meta['siteurl']
         sIcon = meta['icon']
         sType = meta['type']
-        sRawtitle = self.str_conv2(meta['rawtitle'])
         sQuality = meta['quality']
+        sRawtitle = title
+        if sType == 'tvshow' and 'Saison' in title:
+            sRawtitle = title[:title.find('Saison')]
+        sRawtitle = self.str_conv2(sRawtitle)
         try:
             ex = "INSERT INTO history (title, siteurl, icon, type, rawtitle, quality) VALUES (?, ?, ?, ?, ?, ?)"
             self.dbcur.execute(ex, (title, siteurl, sIcon, sType, sRawtitle, sQuality))
@@ -405,8 +405,11 @@ class cDb:
         siteurl = meta['siteurl']
         sIcon = meta['icon']
         sType = meta['type']
-        sRawtitle = self.str_conv2(meta['rawtitle'])
         sQuality = meta['quality']
+        sRawtitle = title
+        if sType == 'tvshow' and 'Saison' in title:
+            sRawtitle = title[:title.find('Saison')]
+        sRawtitle = self.str_conv2(sRawtitle)
         try:
             ex = "UPDATE history SET title='%s', siteurl='%s', type='%s', icon='%s', quality='%s' WHERE rawtitle='%s'" % (title, siteurl, sType, sIcon, sQuality, sRawtitle)
             self.dbcur.execute(ex)
@@ -424,7 +427,21 @@ class cDb:
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR GET history: ' + e.message)
-            return None
+            return []
+
+    def get_historyFromTitle(self, title):
+        sRawtitle = title
+        if 'Saison' in title:
+            sRawtitle = title[:title.find('Saison')]
+        sRawtitle = self.str_conv2(sRawtitle)
+        sql_select = "SELECT * FROM history WHERE rawtitle = '%s'" % (sRawtitle)
+        try:
+            self.dbcur.execute(sql_select)
+            matchedrow = self.dbcur.fetchone()
+            return matchedrow
+        except Exception, e:
+            cConfig().log('SQL ERROR GET history: ' + e.message)
+            return []
 
 
     def del_history(self, sRawtitle):

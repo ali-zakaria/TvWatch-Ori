@@ -91,9 +91,7 @@ class cFav:
         oGui = cGui()
 
         oInputParameterHandler = cInputParameterHandler()
-
         #aParams = oInputParameterHandler.getAllParameter()
-
         if (oInputParameterHandler.exist('sCat')):
             sCat = oInputParameterHandler.getValue('sCat')
         else:
@@ -102,15 +100,12 @@ class cFav:
         row = cDb().get_favorite()
 
         for data in row:
-
             try:
                 title = data[1].encode('utf-8')
             except:
                 title = data[1]
 
-
             try:
-
                 siteurl = urllib.unquote_plus(data[2])
                 site = data[3]
                 function = data[4]

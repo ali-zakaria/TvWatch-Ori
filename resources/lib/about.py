@@ -15,32 +15,30 @@ from resources.lib.handler.requestHandler import cRequestHandler
 SITE_IDENTIFIER = 'about'
 SITE_NAME = 'About'
 
-
 class cAbout:
 
-    client_id = '85aab916fa0aa0b50a29'
-    client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
+    def __init__(self):
+        self.client_id = '85aab916fa0aa0b50a29'
+        self.client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
 
     #retourne True si les 2 fichiers sont present mais pas avec les meme tailles
     def checksize(self, filepath, size):
+        ret = False
         try:
             f = open(filepath)
             Content = f.read()
             f.close()
-
-            if len(Content) == size:
-                #ok fichier existe et meme taille
-                return False
-            #fichier existe mais pas la meme taille
-            return True
-        except:
+            if len(Content) != size:
+                ret = True
+        except (OSError, IOError) as e:
             #fichier n'existe pas
-            return False
-        #au cas ou ....
-        return False
+            cConfig().log("checksize ERROR: " + e.errno)
+            # ret = False
+        return res
 
     def getUpdate(self):
         service_time = cConfig().getSetting('service_time')
+        cConfig().log("getUpdate")
 
         #Si pas d'heure indique = premiere install
         if not (service_time):
@@ -121,7 +119,8 @@ class cAbout:
                         result += json.loads(sHtmlContent)
                 except:
                     pass
-        except:
+        except Exception, e:
+            cConfig().log("resultGit ERROR: "+ e.message)
             return False
         return result
 
@@ -142,10 +141,10 @@ class cAbout:
                     sContent = sContent.replace(" ","")
                     sContent = sContent.replace(".","")
                     newVersion = int(sContent)
-                    currentVersion = int(version.replace(".","")
-                    # cConfig().log("checkupdate New Version :" + str(newVersion))
-                    # cConfig().log("checkupdate Current Version :" + str(currentVersion))
-                    if newVersion > currentVersion):
+                    currentVersion = int(version.replace(".",""))
+                    # cConfig().log("checkupdate New Version: " + str(newVersion))
+                    # cConfig().log("checkupdate Current Version: " + str(currentVersion))
+                    if newVersion > currentVersion:
                         cConfig().setSetting('home_update', str('true'))
                         cConfig().setSetting('service_time', str(datetime.datetime.now()))
                         dialog = cConfig().showInfo("TvWatch", "Mise à jour disponible")

@@ -21,20 +21,7 @@ class cHosterGui:
     def showHoster(self, oHoster, sMediaUrl, sThumbnail, protectedLink, sQual, bGetRedirectUrl = False):
         cConfig().log('showHoster')
 
-        oInputParameterHandler = cInputParameterHandler()
-        sMovieTitle = oInputParameterHandler.getValue('title')
-
         params = ['','','','','','','']
-
-        # oOutputParameterHandler = cOutputParameterHandler()
-        # oOutputParameterHandler.addParameter('sMediaUrl', sMediaUrl)
-        # oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)
-        # oOutputParameterHandler.addParameter('sHosterIdentifier', oHoster.getPluginIdentifier())
-        # oOutputParameterHandler.addParameter('protectedLink', protectedLink)
-        # oOutputParameterHandler.addParameter('sFileName', oHoster.getFileName())
-        # oOutputParameterHandler.addParameter('sTitle', oHoster.getDisplayName())
-        # oOutputParameterHandler.addParameter('sId', 'cHosterGui')
-        # oOutputParameterHandler.addParameter('siteUrl', sMediaUrl)
 
         params[0] = oHoster.getPluginIdentifier()
         params[1] = sMediaUrl

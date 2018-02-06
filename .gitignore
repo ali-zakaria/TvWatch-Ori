@@ -33,6 +33,7 @@
 *.app
 
 #ignore files
-manageUsers.py
-password.py
 
+#ignore folders
+private/
+releases/

@@ -569,7 +569,7 @@ msgid "[COLOR orange]Search on Alluc_ee[/COLOR]"
 msgstr ""
 
 msgctxt "#30418"
-msgid "[COLOR khaki]Update available[/COLOR]"
+msgid "[COLOR skyblue]Update available[/COLOR]"
 msgstr ""
 
 msgctxt "#30419"

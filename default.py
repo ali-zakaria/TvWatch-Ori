@@ -29,9 +29,9 @@ class main:
         cDb()._create_tables()
         cConfig().log('Constructor of default.py')
 
-    def __del__(self):
-        cMySqlDB().updateIsPlaying("False", cDb().get_clientID())
-        # cConfig().log('Destructor of default.py')
+    # def __del__(self):
+    #     cMySqlDB().updateIsPlaying("False", cDb().get_clientID())
+    #     cConfig().log('Destructor of default.py')
 
     def parseUrl(self):
         cConfig().log('call parseUrl methode')
@@ -60,14 +60,14 @@ class main:
             try:
                 from resources.lib.about import cAbout
                 cAbout().getUpdate()
-            except:
-                pass
+            except Exception, e:
+                cConfig().log('getUpdate ERROR: ' + e.message)
 
             #charge home
             #plugins = __import__('resources.lib.home', fromlist=['home']).cHome()
             #function = getattr(plugins, 'showSources')
             cConfig().log('In default.py call load')
-            from resources.sites.zone_telechargement_ws import load, getNextEpisode
+            from resources.sites.zone_telechargement_ws import load
             load() #zone_telechargement_ws
 
             return

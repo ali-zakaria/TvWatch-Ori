@@ -36,10 +36,8 @@ class cMySqlDB:
         try:
             self.dbcur.execute(sql_create)
             self.log('Table MySQL initialized')
-            return True
         except Exception, e:
             self.log('MySQL ERROR _create_tables: ' + e.message)
-            return False
 
     #***********************************
     #   history fonctions
@@ -52,10 +50,8 @@ class cMySqlDB:
             self.dbcur.execute(ex, meta)
             self.db.commit()
             self.log('SQL INSERT table Successfully')
-            return True
         except Exception, e:
             self.log('SQL ERROR INSERT table: ' + e.message)
-            return False
 
     def updateContent(self, meta, code):
         if meta['prenom']:
@@ -122,40 +118,38 @@ class cMySqlDB:
                 self.dbcur.execute(ex, (isPlaying, clientID))
                 self.db.commit()
                 self.log('SQL UPDATE table Successfully: isPlaying with ' + isPlaying)
-                return True
             except Exception, e:
                 self.log('SQL ERROR UPDATE table isPlaying: ' + e.message)
-                return False
 
     def getContent(self):
         sql_select = "SELECT * FROM mainTable"
+        res = []
         try:
             self.dbcur.execute(sql_select)
             res = self.dbcur.fetchall()
-            return res
         except Exception, e:
             self.log('SQL ERROR GET table: ' + e.message)
-            return None
+        return res
 
     def getRegisteredCodes(self):
         sql_select = "SELECT code FROM mainTable"
+        res = []
         try:
             self.dbcur.execute(sql_select)
             res = self.dbcur.fetchall()
-            return res
         except Exception, e:
             self.log('SQL ERROR GET table: ' + e.message)
-            return None
+        return res
 
     def getContentByCode(self, code):
         sql_select = "SELECT * FROM mainTable WHERE code = '%s'" % (code)
+        res = []
         try:
             self.dbcur.execute(sql_select)
             res = self.dbcur.fetchall()
-            return res
         except Exception, e:
             self.log('SQL ERROR GET table: ' + e.message)
-            return None
+        return res
 
     def delContent(self, code = None, deleteAll = False):
         res = False

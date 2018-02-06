@@ -17,7 +17,7 @@ except:
 
 
 # https://developers.themoviedb.org/3
-#xbmc.log(str(year), xbmc.LOGNOTICE)
+#cConfig().log(str(year), cConfig().logNOTICE)
 
 class cTMDb:
     URL = "http://api.themoviedb.org/3/"
@@ -38,15 +38,23 @@ class cTMDb:
                 self.db.row_factory = sqlite.Row
                 self.dbcur = self.db.cursor()
                 self.__createdb()
-        except:
-            pass
+        except Exception, e.message:
+            cConfig().log("cTMDb constructor ERROR: " + e.message)
 
         try:
             self.db = sqlite.connect(self.cache)
             self.db.row_factory = sqlite.Row
             self.dbcur = self.db.cursor()
-        except:
-            pass
+        except Exception, e.message:
+            cConfig().log("cTMDb constructor ERROR: " + e.message)
+
+    def __del__(self):
+        ''' Cleanup db when object destroyed '''
+        try:
+            self.dbcur.close()
+            self.db.close()
+        except Exception, e:
+            cConfig().log('cTMDb ERROR in Destructor: ' + e.message)
 
     def __createdb(self):
 
@@ -77,7 +85,7 @@ class cTMDb:
         try:
             self.dbcur.execute(sql_create)
         except:
-            xbmc.log("non")
+            cConfig().log("non")
 
         sql_create = "CREATE TABLE IF NOT EXISTS tvshow ("\
                            "imdb_id TEXT, "\
@@ -136,14 +144,7 @@ class cTMDb:
                            ");"
 
         self.dbcur.execute(sql_create)
-        xbmc.log("table creer")
-
-    def __del__(self):
-        ''' Cleanup db when object destroyed '''
-        try:
-            self.dbcur.close()
-            self.dbcon.close()
-        except: pass
+        cConfig().log("table creer")
 
     #cherche dans les films ou serie l'id par le nom return ID ou FALSE
     def get_idbyname(self, name, year='', type='movie', page=1):
@@ -320,7 +321,7 @@ class cTMDb:
             _meta['tagline'] = meta['tagline']
 
         # if 'cast' in meta:
-            # xbmc.log("passeeeeeeeeeeeeeeeeeee")
+            # cConfig().log("passeeeeeeeeeeeeeeeeeee")
             # _meta['cast'] = json.loads(_meta['cast'])
         if 'credits' in meta:
             meta['credits'] = eval(str(meta['credits']))
@@ -389,14 +390,14 @@ class cTMDb:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchone()
         except Exception, e:
-            xbmc.log('************* Error selecting from cache db: %s' % e, 4)
+            cConfig().log('************* Error selecting from cache db: %s' % e.message)
             return None
 
         if matchedrow:
-            xbmc.log('Found meta information by name in cache table')
+            cConfig().log('Found meta information by name in cache table')
             return dict(matchedrow)
         else:
-            xbmc.log('No match in local DB', 0)
+            cConfig().log('No match in local DB')
             return None
 
     def _cache_save(self, meta, name, media_type, season, overlay):
@@ -452,7 +453,6 @@ class cTMDb:
             sql = "INSERT INTO %s (imdb_id, tmdb_id, title, year, credits, vote_average, vote_count, runtime, overview, mpaa, premiered, genre, studio, status, poster_path, trailer, backdrop_path, playcount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" % media_type
             self.dbcur.execute(sql, (meta['imdb_id'], meta['id'], meta['title'], meta['year'], meta['credits'], meta['vote_average'], meta['vote_count'], meta['runtime'], meta['overview'], meta['mpaa'], meta['premiered'], meta['genre'], meta['studio'], meta['status'], meta['poster_path'], meta['trailer'], meta['backdrop_path'], 6))
             self.db.commit()
-            self.db.close()
             cConfig().log('SQL INSERT meta film Successfully')
         except Exception, e:
             cConfig().log('SQL ERROR INSERT meta film: ' + e.message)
@@ -465,12 +465,11 @@ class cTMDb:
                 meta['s_premiered'] = s['air_date']
                 meta['s_year'] = s['air_date']
 
-            #xbmc.log(str(s['season_number'])+str(season))
+            #cConfig().log(str(s['season_number'])+str(season))
             try:
                 sql = "INSERT INTO season (imdb_id, tmdb_id, season, year, premiered, poster_path, playcount) VALUES (?, ?, ?, ?, ?, ?, ?)"
                 self.dbcur.execute(sql, (meta['imdb_id'], s['id'], s['season_number'], s['air_date'], s['air_date'], s['poster_path'], 6))
                 self.db.commit()
-                self.db.close()
                 cConfig().log('SQL INSERT meta series Successfully')
             except Exception, e:
                 cConfig().log('SQL ERROR INSERT meta series')
@@ -551,7 +550,7 @@ class cTMDb:
 
     def _call(self, action, append_to_response):
         url = '%s%s?api_key=%s&%s&language=%s' % (self.URL, action, self.api_key, append_to_response, self.lang)
-        #xbmc.log(str(url), xbmc.LOGNOTICE)
+        #cConfig().log(str(url), cConfig().logNOTICE)
         response = urlopen(url)
         data = json.loads(response.read())
         return data

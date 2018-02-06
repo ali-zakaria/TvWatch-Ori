@@ -1,10 +1,9 @@
 =============================================================================
-- Version & Repository: https://github.com/zakaria220/TvWatch/releases
-- Question & Support: https://github.com/zakaria220/TvWatch/issues
+- Version & Repository: https://github.com/zakaria220/kodiStream/releases
+- Question & Support: https://github.com/zakaria220/kodiStream/issues
 =============================================================================
 - Auteurs : zakaria220
 =============================================================================
-- Current Version 0.0.2 - 04.02.2018
+- Version 0.0.1 - 27.01.2018
 =============================================================================
 23-01-2018 -- @zakaria220 -- Initial commit
-04-02-2018 -- @zakaria220 -- Add various things

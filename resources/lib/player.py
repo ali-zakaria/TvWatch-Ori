@@ -77,12 +77,11 @@ class cPlayer(xbmc.Player):
         self.clientID = cDb().get_clientID()
         self.mySqlDB = cMySqlDB()
         self.sQual = quality
+        self.playParams = []
         if "Episode" in title:
             self.sType = 'tvshow'
-            self.sRawtitle = title[:(title.find("Saison")-3)]
         else:
             self.sType = 'movie'
-            self.sRawtitle = title
 
         sPluginHandle = cPluginHandler().getPluginHandle()
 
@@ -148,20 +147,31 @@ class cPlayer(xbmc.Player):
         #         self.showSubtitles(False)
         #         cGui().showInfo("Sous titre charges, Vous pouvez les activer", "Sous-Titres", 15)
 
+        stop = False
         while self.isPlaying() and not self.forcestop:
             try:
-               self.currentTime = self.getTime()
-               self.totalTime = self.getTotalTime()
-               if (self.totalTime - self.currentTime < 20) and not self.theEnd:
-                   if self.sType == 'tvshow':
-                       cGui().showInfo("TvWatch", VSlang(30439))
-                   self.theEnd = True
+                self.currentTime = self.getTime()
+                self.totalTime = self.getTotalTime()
+                if (self.totalTime - self.currentTime < 20) and not self.theEnd:
+                    if self.sType == 'tvshow':
+                        cGui().showInfo("TvWatch", VSlang(30439))
+                    self.theEnd = True
+                if (self.totalTime - self.currentTime < 60) and not stop:
+                    if self.sType == 'tvshow':
+                        from resources.sites.zone_telechargement_ws import prepareNextEpisode
+                        # cGui().showInfo("TvWatch", "Preparing next episode")
+                        self.playParams = prepareNextEpisode(self.sTitle, self.sQual, self.sType)
+                    stop = True
             except Exception, e:
                 cConfig().log('Run player ERROR: ' + e.message)
             xbmc.sleep(1000)
 
         # if not self.playBackStoppedEventReceived:
         self.onPlayBackStopped()
+
+        if self.playParams != []:
+            from resources.lib.gui.hoster import cHosterGui
+            cHosterGui().play(self.playParams)
 
         #Uniquement avec la lecture avec play()
         #if (player_conf == '0'):
@@ -199,8 +209,8 @@ class cPlayer(xbmc.Player):
         except:
             pass
 
-        # if self.theEnd and self.sType == 'movie':
-        #     cDb().del_history(self.sRawtitle)
+        if self.theEnd:
+            cDb().del_resume(self.sTitle)
 
     def onPlayBackStarted(self):
         VSlog("player started")
@@ -218,20 +228,17 @@ class cPlayer(xbmc.Player):
         cConfig().log('__getResume')
         meta = {}
         meta['title'] = self.sTitle
-        # cConfig().log(self.sTitle)
-        # cDb().del_resume('',True)
         try:
             data = cDb().get_resume(meta)
-            # cConfig().log(data)
-            if not data == '':
+            if data:
                 time = float(data[0][2])
                 self.seekTime(time)
                 # label = '%s %.2f minutes' % ('Reprendre:', time / 60)
                 # oDialog = cConfig().createDialogYesNo(label)
                 # if (oDialog == 1):
                 #     self.seekTime(time)
-        except:
-            pass
+        except Exception, e:
+            cConfig().log('__getResume ERROR: ' + e.message)
 
     def __setResume(self):
         cConfig().log('__setResume')
@@ -245,31 +252,22 @@ class cPlayer(xbmc.Player):
         meta['timepoint'] = str(self.currentTime)
         # cConfig().log(self.sTitle)
         # cConfig().log(self.currentTime)
-        try:
-            cDb().insert_resume(meta)
-        except:
-            pass
+        cDb().insert_resume(meta)
 
     def __setHistory(self):
         cConfig().log('__setHistory')
-
-        if self.theEnd:
-            return
 
         meta = {}
         meta['title'] = self.sTitle
         meta['icon'] = self.Thumbnail
         meta['siteurl'] = self.protectedLink
         meta['type'] = self.sType
-        meta['rawtitle'] = self.sRawtitle
         meta['quality'] = self.sQual
 
-        cConfig().log(self.sTitle)
-
+        # cConfig().log(self.sTitle)
         cDb().insert_history(meta)
 
     def __setWatched(self):
-
         #inutile sur les dernieres version > Dharma
         if (cConfig().isDharma()):
             return

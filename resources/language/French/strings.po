@@ -570,8 +570,8 @@ msgid "[COLOR orange]Search on Alluc_ee[/COLOR]"
 msgstr "[COLOR orange]Recherche sur Alluc_ee[/COLOR]"
 
 msgctxt "#30418"
-msgid "[COLOR khaki]Update available[/COLOR]"
-msgstr "[COLOR khaki]Mise à jour disponible[/COLOR]"
+msgid "[COLOR skyblue]Update available[/COLOR]"
+msgstr "[COLOR skyblue]Mise à jour disponible[/COLOR]"
 
 msgctxt "#30419"
 msgid "View: Visual search (recommended 500)"

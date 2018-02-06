@@ -432,6 +432,7 @@ class cGuiElement:
 
 
     def setWatched(self, sId, sTitle):
+        cConfig().log("setWatched")
         try:
             watched = {}
             #sTitle = self.getTitle()
@@ -577,6 +578,7 @@ class cGuiElement:
         if meta['cover_url']:
             self.__sThumbnail = meta['cover_url']
             self.__sPoster = meta['cover_url']
+        
         return
 
     def getItemValues(self):

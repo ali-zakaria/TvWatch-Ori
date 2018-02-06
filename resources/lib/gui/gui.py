@@ -55,7 +55,7 @@ class cGui():
         CONTENT = 'addons'
 
 
-    def addMovie(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = '', sMeta = False):
+    def addMovie(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = '', meta = False, continueToWatchFolder = False):
         cGui.CONTENT = "movies"
         oGuiElement = cGuiElement()
         oGuiElement.setSiteName(sId)
@@ -68,16 +68,16 @@ class cGui():
         oGuiElement.setDescription(sDesc)
         oGuiElement.setMovieFanart()
         oGuiElement.setCat(1)
-        oGuiElement.setShowMeta(sMeta)
+        oGuiElement.setShowMeta(meta)
 
         if oOutputParameterHandler.getValue('sMovieTitle'):
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
 
-        self.addFolder(oGuiElement, oOutputParameterHandler)
+        self.addFolder(oGuiElement, oOutputParameterHandler, continueToWatchFolder = continueToWatchFolder)
 
 
-    def addTV(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = '', sMeta = False):
+    def addTV(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = '', meta = False, continueToWatchFolder = False):
         cGui.CONTENT = "tvshows"
         oGuiElement = cGuiElement()
         oGuiElement.setSiteName(sId)
@@ -90,7 +90,7 @@ class cGui():
         oGuiElement.setDescription(sDesc)
         oGuiElement.setTvFanart()
         oGuiElement.setCat(2)
-        oGuiElement.setShowMeta(sMeta)
+        oGuiElement.setShowMeta(meta)
 
         # if oOutputParameterHandler.getValue('season'):
             # sSeason = oOutputParameterHandler.getValue('season')
@@ -104,7 +104,7 @@ class cGui():
             sTitle = oOutputParameterHandler.getValue('sMovieTitle')
             oGuiElement.setFileName(sTitle)
 
-        self.addFolder(oGuiElement, oOutputParameterHandler)
+        self.addFolder(oGuiElement, oOutputParameterHandler, continueToWatchFolder = continueToWatchFolder)
 
     def addMisc(self, sId, sFunction, sLabel, sIcon, sThumbnail, sDesc, oOutputParameterHandler = ''):
 
@@ -242,7 +242,7 @@ class cGui():
         self.addFolder(oGuiElement, oOutputParameterHandler)
 
     #afficher les liens non playable
-    def addFolder(self, oGuiElement, oOutputParameterHandler='',_isFolder=True):
+    def addFolder(self, oGuiElement, oOutputParameterHandler='',_isFolder=True, continueToWatchFolder=False):
         #recherche append les reponses
         if  xbmcgui.Window(10101).getProperty('search') == 'true':
             import copy
@@ -288,7 +288,8 @@ class cGui():
                 self.createContexMenuba(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
-                self.createContexMenuRemove(oGuiElement, oOutputParameterHandler)
+                if continueToWatchFolder:
+                    self.createContexMenuRemove(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuSettings(oGuiElement, oOutputParameterHandler)
                 # self.createContexMenuHome(oGuiElement, oOutputParameterHandler)
 
@@ -297,7 +298,8 @@ class cGui():
                 self.createContexMenuba(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuinfo(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuFav(oGuiElement, oOutputParameterHandler)
-                self.createContexMenuRemove(oGuiElement, oOutputParameterHandler)
+                if continueToWatchFolder:
+                    self.createContexMenuRemove(oGuiElement, oOutputParameterHandler)
                 self.createContexMenuSettings(oGuiElement, oOutputParameterHandler)
                 # self.createContexMenuHome(oGuiElement, oOutputParameterHandler)
 
@@ -516,7 +518,6 @@ class cGui():
         return oListItem
 
     def setEndOfDirectory(self, ForceViewMode = False):
-
         iHandler = cPluginHandler().getPluginHandle()
         #modif 22/06
         if not self.listing:

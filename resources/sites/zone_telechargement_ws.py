@@ -63,15 +63,8 @@ SPECT_NEWS = (URL_MAIN + 'spectacles/', 'showMovies') # dernieres spectacles
 CONCERT_NEWS = (URL_MAIN + 'concerts/', 'showMovies') # dernieres concerts
 AUTOFORM_VID = (URL_MAIN + 'autoformations-videos/', 'showMovies')
 
-currentEpisode = 1
-
 def load():
     oGui = cGui()
-
-    if (cConfig().getSetting('home_update') == 'true'):
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
-        oGui.addDir(SITE_IDENTIFIER, 'showUpdate', util.VSlang(30418), 'update.png', oOutputParameterHandler)
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://primatech/')
@@ -102,6 +95,11 @@ def load():
     oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
     oGui.addDir('cFav', 'getFavourites', util.VSlang(30423), 'mark.png', oOutputParameterHandler) # Ma liste
 
+    if (cConfig().getSetting('home_update') == 'true'):
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
+        oGui.addDir(SITE_IDENTIFIER, 'showUpdate', util.VSlang(30418), 'update.png', oOutputParameterHandler)
+
     oGui.setEndOfDirectory(50)
 
 def showSearch():
@@ -118,6 +116,7 @@ def showFilms():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_EXCLUS[0])
+    oOutputParameterHandler.addParameter('movie', "True")
     oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30427), 'news.png', oOutputParameterHandler) #Populaires
 
     #oOutputParameterHandler = cOutputParameterHandler()
@@ -208,6 +207,7 @@ def showMovies(sSearch = ''):
     oGui = cGui()
     bGlobal_Search = False
     view = 500
+    movie = "False"
 
     if sSearch:
         if URL_SEARCH[0] in sSearch:
@@ -223,6 +223,10 @@ def showMovies(sSearch = ''):
     else:
         oInputParameterHandler = cInputParameterHandler()
         sUrl = oInputParameterHandler.getValue('siteUrl')
+        try:
+            movie = oInputParameterHandler.getValue('movie')
+        except:
+            pass
         # cConfig().log(sUrl)
         request = urllib2.Request(sUrl, None, headers)
         sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)"><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?"> ([^<]+?)<'
@@ -275,8 +279,7 @@ def showMovies(sSearch = ''):
 
             if 'films-gratuit' in sUrl2 or '4k' in sUrl2:
                 oGui.addMovie(SITE_IDENTIFIER, 'showMoviesLinks', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)
-            else:
-                oOutputParameterHandler.addParameter('sOtherSeason', 'False')
+            elif movie != "True":
                 oGui.addTV(SITE_IDENTIFIER, 'showSeriesLinks', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)
 
         cConfig().finishDialog(dialog)
@@ -325,8 +328,6 @@ def showMoviesLinks():
     aResult = oParser.parse(sHtmlContent, sPattern)
     #print aResult
 
-    showMeta = True
-
     sQual = ''
     if (aResult[0]):
         sQual = aResult[1][0]
@@ -337,7 +338,7 @@ def showMoviesLinks():
         oOutputParameterHandler.addParameter('siteUrl', sUrl)
         oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
         oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-        oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler, showMeta)
+        oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler, meta=True)
 
     #on regarde si dispo dans d'autres qualités
     sPattern = '<a href="([^"]+)"><span class="otherquality"><span style="color:#.{6}"><b>([^<]+)<\/b><\/span><span style="color:#.{6}"><b>([^<]+)<\/b><\/span>'
@@ -359,7 +360,7 @@ def showMoviesLinks():
             oOutputParameterHandler.addParameter('siteUrl', URL_MAIN[:-1] + aEntry[0])
             oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
             oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler, showMeta)
+            oGui.addMovie(SITE_IDENTIFIER, 'showHosters', sTitle, '', sThumbnail, '', oOutputParameterHandler, meta=True)
 
         cConfig().finishDialog(dialog)
 
@@ -374,55 +375,51 @@ def showSeriesLinks():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     sUrl = oInputParameterHandler.getValue('siteUrl')
-    sOtherSeason = oInputParameterHandler.getValue('sOtherSeason')
 
-    if sOtherSeason == 'True':
-        showSeriesHosters([sUrl, sMovieTitle, sThumbnail])
-        return
+    seasons = []
 
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    oParser = cParser()
-
     #Mise àjour du titre
     sPattern = 'content="Telecharger (.+?)Qualité [^\|]+?\| [^\|]+?\| (.+?)       la serie'
+    oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
-
-    showMeta = True
 
     #print aResult
     if (aResult[0]):
         sMovieTitle = aResult[1][0][0]+aResult[1][0][1]
 
-    oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Qualités disponibles pour cette saison :[/COLOR]')
-
     #on recherche d'abord la qualité courante
     sPattern = '<div style="[^"]+?">.+?Qualité (.+?)<'
     aResult = oParser.parse(sHtmlContent, sPattern)
-    #print aResult
 
     sQual = ''
     if (aResult[1]):
         sQual = aResult[1][0]
 
     sDisplayTitle = cUtil().DecoTitle(sMovieTitle) + ' [COLOR skyblue]' + sQual + '[/COLOR]'
-    cConfig().log(sQual)
 
-    oOutputParameterHandler = cOutputParameterHandler()
-    oOutputParameterHandler.addParameter('siteUrl', sUrl)
-    oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
-    oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-    oOutputParameterHandler.addParameter('sQual', sQual)
-    oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, showMeta)
+    meta = {}
+    meta['siteUrl'] = sUrl
+    meta['sMovieTitle'] = sMovieTitle
+    meta['sThumbnail'] = sThumbnail
+    meta['sQual'] = sQual
+    meta['sDisplayTitle'] = sDisplayTitle
+    meta['season'] = '0'
+    if 'Saison ' in sMovieTitle:
+        try:
+            meta['season'] = sMovieTitle[sMovieTitle.find('Saison ')+7:]
+            nb = int(meta['season'])
+        except:
+            meta['season'] = '0'
+    seasons.append(meta)
 
     #on regarde si dispo dans d'autres qualités
     sHtmlContent1 = CutQual(sHtmlContent)
     #sPattern1 = '<a href="([^"]+)"><span class="otherquality">([^<]+)<'
     sPattern1 = '<a href="([^"]+)"><span class="otherquality"><span style="color:#.{6}"><b>([^<]+)<\/b><\/span><span style="color:#.{6}"><b>([^<]+)<\/b><\/span>'
-
     aResult1 = oParser.parse(sHtmlContent1, sPattern1)
-    #print aResult1
 
     total = 0
     dialog = None
@@ -430,42 +427,75 @@ def showSeriesLinks():
         for aEntry in aResult1[1]:
             sQual = aEntry[1] + " |" + aEntry[2].replace("(","").replace(")","")
             sDisplayTitle = cUtil().DecoTitle(sMovieTitle) + ' [COLOR skyblue]' + sQual + '[/COLOR]'
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + 'telecharger-series' + aEntry[0])
-            oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-            oOutputParameterHandler.addParameter('sQual', sQual)
-            oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, showMeta)
+            sUrl = URL_MAIN + 'telecharger-series' + aEntry[0]
+
+            meta = {}
+            meta['siteUrl'] = sUrl
+            meta['sMovieTitle'] = sMovieTitle
+            meta['sThumbnail'] = sThumbnail
+            meta['sQual'] = sQual
+            meta['sDisplayTitle'] = sDisplayTitle
+            meta['season'] = '0'
+            if 'Saison ' in sMovieTitle:
+                meta['season'] = sMovieTitle[sMovieTitle.find('Saison ')+7:]
+            seasons.append(meta)
 
     #on regarde si dispo d'autres saisons
     sHtmlContent2 = CutSais(sHtmlContent)
     #sPattern2 = '<a href="([^"]+)"><span class="otherquality">([^<]+)<'
     sPattern2 = '<a href="([^"]+)"><span class="otherquality">([^<]+)<b>([^<]+)<span style="color:#.{6}">([^<]+)<\/span><span style="color:#.{6}">([^<]+)<\/b><\/span>'
-
     aResult2 = oParser.parse(sHtmlContent2, sPattern2)
-    #print aResult2
 
     if (aResult2[0] == True):
         total = len(aResult2[1])
         dialog = cConfig().createDialog(SITE_NAME)
-        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Autres Saisons disponibles pour cette série :[/COLOR]')
         for aEntry in aResult2[1]:
             cConfig().updateDialog(dialog, total)
             if dialog.iscanceled():
                 break
-            #cConfig().log(aEntry)
-            sTitle = '[COLOR skyblue]' + aEntry[1] + aEntry[2] + aEntry[3] + aEntry[4] + '[/COLOR]'
-            if 'Saison' in sMovieTitle:
+            sQual = aEntry[3] + " | " + aEntry[4].replace("(","").replace(")","")
+            sTitle = aEntry[1] + aEntry[2] + '[COLOR skyblue]' + sQual + '[/COLOR]'
+            if ' Saison ' in sMovieTitle:
+                sTitle = sMovieTitle[:sMovieTitle.find(' Saison ')] + sTitle
                 sMovieTitle = sMovieTitle[:sMovieTitle.find('Saison')]
                 sMovieTitle += 'Saison '
                 sMovieTitle += aEntry[2]
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('siteUrl', URL_MAIN + 'telecharger-series' + aEntry[0])
-            oOutputParameterHandler.addParameter('sMovieTitle', str(sMovieTitle))
-            oOutputParameterHandler.addParameter('sThumbnail', str(sThumbnail))
-            oOutputParameterHandler.addParameter('sOtherSeason', 'True')
-            oGui.addTV(SITE_IDENTIFIER, 'showSeriesLinks', sTitle, 'series.png', sThumbnail, '', oOutputParameterHandler, showMeta)
+            sUrl = URL_MAIN + 'telecharger-series' + aEntry[0]
+
+            meta = {}
+            meta['siteUrl'] = sUrl
+            meta['sMovieTitle'] = sMovieTitle
+            meta['sThumbnail'] = sThumbnail
+            meta['sQual'] = sQual
+            meta['sDisplayTitle'] = sTitle
+            meta['season'] = '0'
+            if 'Saison ' in sMovieTitle:
+                meta['season'] = sMovieTitle[sMovieTitle.find('Saison ')+7:]
+            seasons.append(meta)
         cConfig().finishDialog(dialog)
+
+    stop = True
+    seasons, currentSeason, currentEpisode = sortSeasonsAndGetCurrentSeason(seasons)
+    if currentSeason != 0:
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Continuer à regarder :[/COLOR]')
+        stop = False
+    else:
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Saisons disponibles pour cette série :[/COLOR]')
+    for season in seasons:
+        oOutputParameterHandler = cOutputParameterHandler()
+        oOutputParameterHandler.addParameter('siteUrl', season['siteUrl'])
+        oOutputParameterHandler.addParameter('sMovieTitle', season['sMovieTitle'])
+        oOutputParameterHandler.addParameter('sThumbnail', season['sThumbnail'])
+        oOutputParameterHandler.addParameter('sQual', season['sQual'])
+        oOutputParameterHandler.addParameter('currentEpisode', str(currentEpisode))
+        if currentSeason == int(season['season']):
+            oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', season['sDisplayTitle'], '', season['sThumbnail'], '', oOutputParameterHandler, meta=True)
+        else:
+            if not stop:
+                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Autres Saisons disponibles pour cette série :[/COLOR]')
+                stop = True
+            oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', season['sDisplayTitle'], '', season['sThumbnail'], '', oOutputParameterHandler, meta=True)
+
     oGui.setEndOfDirectory()
 
 def showHosters():# recherche et affiche les hotes
@@ -530,7 +560,7 @@ def showHosters():# recherche et affiche les hotes
     Display_protected_link(params)
 
 def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
-    #xbmc.log('showSeriesHosters')
+    cConfig().log('showSeriesHosters')
 
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler() #apelle l'entree de paramettre
@@ -538,6 +568,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     sQual = oInputParameterHandler.getValue('sQual')
+    currentEpisode = oInputParameterHandler.getValue('currentEpisode')
 
     if params != ['','','']:
         sUrl = params[0]
@@ -571,9 +602,12 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
             if stop == False:
                 entries.append(aEntry)
 
-        showMeta = True
+        episodes = []
         for aEntry in entries:
             cConfig().updateDialog(dialog, len(entries))
+
+            cConfig().log(aEntry)
+
             if dialog.iscanceled():
                 break
 
@@ -591,17 +625,47 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
                 # if sName != '' and sName.find('pisode') != -1:
                 sTitle = sMovieTitle + ' ' + sName
                 sTitle = sTitle.replace('[COMPLETE] ','')
+                cConfig().log(sTitle)
                 sDisplayTitle = cUtil().DecoTitle(sTitle)
                 URL_DECRYPT = aEntry[1]
 
-                oOutputParameterHandler = cOutputParameterHandler()
-                oOutputParameterHandler.addParameter('siteUrl', sUrl2)
-                oOutputParameterHandler.addParameter('sMovieTitle', sTitle)
-                oOutputParameterHandler.addParameter('sThumbnail', sThumbnail)
-                oOutputParameterHandler.addParameter('sType', 'tvshow')
-                oOutputParameterHandler.addParameter('sQual', sQual)
-                oOutputParameterHandler.addParameter('refresh', "False")
-                oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, showMeta)
+                meta = {}
+                meta['siteUrl'] = sUrl2
+                meta['sMovieTitle'] = sTitle
+                meta['sDisplayTitle']= sDisplayTitle
+                meta['sThumbnail'] = sThumbnail
+                meta['sType'] = 'tvshow'
+                meta['sQual'] = sQual
+                meta['refresh'] = "False"
+                meta['episode'] = '0'
+                if "Episode" in sTitle:
+                    episode = sTitle[sTitle.find("Episode")+7:].replace(" ","")
+                    meta['episode'] = episode
+                    episodes.append(meta)
+
+        for i in range(len(episodes)):
+            if int(episodes[i]['episode']) == int(currentEpisode):
+                episodes[i], episodes[0] = episodes[0], episodes[i]
+                break
+
+        stop = True
+        if int(currentEpisode) != 0:
+            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Continuer à regarder :[/COLOR]')
+            stop = False
+        else:
+            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Episodes disponibles pour cette saison :[/COLOR]')
+        for episode in episodes:
+            oOutputParameterHandler = cOutputParameterHandler()
+            oOutputParameterHandler.addParameter('siteUrl', episode['siteUrl'])
+            oOutputParameterHandler.addParameter('sMovieTitle', episode['sMovieTitle'])
+            oOutputParameterHandler.addParameter('sThumbnail', episode['sThumbnail'])
+            oOutputParameterHandler.addParameter('sType', episode['sType'])
+            oOutputParameterHandler.addParameter('sQual', episode['sQual'])
+            oOutputParameterHandler.addParameter('refresh', episode['refresh'])
+            oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', episode['sDisplayTitle'], '', episode['sThumbnail'], '', oOutputParameterHandler, meta=True)
+            if not stop:
+                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]Autres episodes disponibles pour cette saison :[/COLOR]')
+                stop = True
 
         cConfig().finishDialog(dialog)
 
@@ -638,7 +702,7 @@ def showStreamingHosters():# recherche et affiche les hotes
 
     oGui.setEndOfDirectory()
 
-def Display_protected_link(params = ['','','','','']):
+def Display_protected_link(params = ['','','','',''], playNow = True):
     # cConfig().log('Display_protected_link')
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
@@ -694,14 +758,36 @@ def Display_protected_link(params = ['','','','','']):
             if (oHoster != False):
                 oHoster.setDisplayName(sDisplayTitle)
                 oHoster.setFileName(sTitle)
-                if cHosterGui().showHoster(oHoster, sHosterUrl, sThumbnail, sUrl, sQual):
-                    if sType == 'tvshow':
-                        params = getNextEpisode(sMovieTitle, sQual)
-                        cConfig().log(sMovieTitle)
-                        if params:
-                            Display_protected_link(params)
-                if refresh == "True":
-                    cGui().updateDirectory()
+
+                playParams = []
+                playParams.append(oHoster.getPluginIdentifier())
+                playParams.append(sHosterUrl)
+                playParams.append(sUrl)
+                playParams.append(sTitle)
+                playParams.append(sDisplayTitle)
+                playParams.append(sThumbnail)
+                playParams.append(sQual)
+
+                if playNow:
+                    cHosterGui().play(playParams)
+                    if refresh == "True":
+                        cGui().updateDirectory()
+                else:
+                    return playParams
+                return []
+
+def prepareNextEpisode(sMovieTitle, sQual, sType):
+    cConfig().log("Début prepareNextEpisode")
+    if sType == 'tvshow':
+        params = getNextEpisode(sMovieTitle, sQual)
+        if params:
+            test = Display_protected_link(params, False)
+            cConfig().log("Fin prepareNextEpisode")
+            return test
+    return None
+
+def playUrl(playParams):
+    cHosterGui().play(playParams)
 
 def getNextEpisode(title, sQual, nextSeason = False):
     cConfig().log('getNextEpisode: ' + title)
@@ -861,9 +947,9 @@ def continueToWatch():
         sDisplayTitle = cUtil().DecoTitle(sTitle)
 
         if sType == 'tvshow':
-            oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)
+            oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, continueToWatchFolder = True)
         else:
-            oGui.addMovie(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)
+            oGui.addMovie(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, continueToWatchFolder = True)
 
     cConfig().finishDialog(dialog)
     if len(matchedrow) == 0:
@@ -965,7 +1051,7 @@ def DecryptDlProtecte(url):
         cConfig().log( e.read() )
         cConfig().log( e.reason )
         return ''
-    except timeout:
+    except Exception:
         cConfig().log('timeout')
         cGui().showInfo("Erreur", 'Site Dl-Protecte HS' , 5)
         return ''
@@ -1130,3 +1216,29 @@ def showUpdate():
     except:
         pass
     return
+
+def sortSeasonsAndGetCurrentSeason(seasons):
+    stop = False
+    res = cDb().get_historyFromTitle(seasons[0]['sMovieTitle'])
+    currentSeason = 0
+    currentEpisode = 0
+    while not stop:
+        stop = True
+        for i in range(len(seasons)-1):
+            if int(seasons[i]['season']) > int(seasons[i+1]['season']):
+                seasons[i], seasons[i+1] = seasons[i+1], seasons[i]
+                stop = False
+
+    if res:
+        ind = 0
+        for i in range(len(seasons)):
+            title = res[3]
+            if "Episode " in title:
+                title = title[:title.find("Episode ")].rstrip()
+            if title == seasons[i]['sMovieTitle']:
+                currentEpisode = int(res[3][res[3].find("Episode ")+8:].replace(" ",""))
+                currentSeason = int(seasons[i]['season'])
+                seasons[ind], seasons[i] = seasons[i], seasons[ind]
+                ind += 1
+
+    return seasons, currentSeason, currentEpisode
