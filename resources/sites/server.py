@@ -263,9 +263,9 @@ def showMovies(sSearch = ''):
 
             #Si recherche et trop de resultat, on nettoye
             #31/12/17 Ne fonctionne plus ?
-            if sSearch and total > 2:
-                if cUtil().CheckOccurence(sSearch, sTitle) == 0:
-                    continue
+            # if sSearch and total > 2:
+            #     if cUtil().CheckOccurence(sSearch, sTitle) == 0:
+            #         continue
 
             if 'http' in aEntry[1]:
                 sThumbnail = aEntry[1]
@@ -381,6 +381,9 @@ def showSeriesLinks():
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
     sThumbnail = oInputParameterHandler.getValue('sThumbnail')
     sUrl = oInputParameterHandler.getValue('siteUrl')
+
+    sMovieTitle = sMovieTitle.replace('[COMPLETE]','')
+    sMovieTitle = sMovieTitle.rstrip()
 
     seasons = []
 
