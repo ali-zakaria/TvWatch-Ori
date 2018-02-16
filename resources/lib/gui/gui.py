@@ -467,7 +467,7 @@ class cGui():
         self.CreateSimpleMenu(oGuiElement,oOutputParameterHandler,'globalParametre','globalParametre','opensetting',util.VSlang(30023))
 
     def createContexMenuHome(self, oGuiElement, oOutputParameterHandler= ''):
-        self.CreateSimpleMenu(oGuiElement,oOutputParameterHandler,'zone_telechargement_ws','zone_telechargement_ws','load',util.VSlang(30025))
+        self.CreateSimpleMenu(oGuiElement,oOutputParameterHandler,'server','server','load',util.VSlang(30025))
 
     def __createContextMenu(self, oGuiElement, oListItem):
         sPluginPath = cPluginHandler().getPluginPath();

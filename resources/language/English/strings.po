@@ -93,7 +93,7 @@ msgid "Play"
 msgstr ""
 
 msgctxt "#30031"
-msgid "Métadata"
+msgid "Metadata"
 msgstr ""
 
 msgctxt "#30032"
@@ -101,7 +101,7 @@ msgid "View"
 msgstr ""
 
 msgctxt "#30033"
-msgid "Tool"
+msgid "Tools"
 msgstr ""
 
 msgctxt "#30034"
@@ -129,11 +129,11 @@ msgid "Search (Movie)"
 msgstr ""
 
 msgctxt "#30079"
-msgid "Search (Tvshow/Anim)"
+msgid "Search (TVShows/Cartoons)"
 msgstr ""
 
 msgctxt "#30080"
-msgid "Search (Other category)"
+msgid "Search (Other categories)"
 msgstr ""
 
 msgctxt "#30081"
@@ -205,7 +205,7 @@ msgid "Children"
 msgstr ""
 
 msgctxt "#30112"
-msgid "Documentary"
+msgid "Documentaries"
 msgstr ""
 
 msgctxt "#30113"
@@ -233,11 +233,11 @@ msgid "Movies"
 msgstr ""
 
 msgctxt "#30121"
-msgid "Tvshow"
+msgid "TVShows"
 msgstr ""
 
 msgctxt "#30122"
-msgid "Animes"
+msgid "Cartoons"
 msgstr ""
 
 msgctxt "#30125"
@@ -249,7 +249,7 @@ msgid "Beta Tester (not recommended)"
 msgstr ""
 
 msgctxt "#30127"
-msgid "Tool"
+msgid "Tools"
 msgstr ""
 
 msgctxt "#30128"
@@ -390,7 +390,7 @@ msgid "Auto update"
 msgstr ""
 
 msgctxt "#30303"
-msgid "Enable/Disable"
+msgid "Disable"
 msgstr ""
 
 msgctxt "#30304"
@@ -430,7 +430,7 @@ msgid "Watch"
 msgstr ""
 
 msgctxt "#30313"
-msgid "Recommend"
+msgid "recommended"
 msgstr ""
 
 msgctxt "#30314"
@@ -506,11 +506,11 @@ msgid "Username"
 msgstr ""
 
 msgctxt "#30402"
-msgid "Password"
+msgid "Password"s
 msgstr ""
 
 msgctxt "#30403"
-msgid "Activate"
+msgid "Enable"
 msgstr ""
 
 msgctxt "#30404"
@@ -518,7 +518,7 @@ msgid "View : Movies (recommended 50-51-500-501-508) "
 msgstr ""
 
 msgctxt "#30405"
-msgid "View: Tvshow (recommended 50-51-500-501-508) "
+msgid "View: TVShow (recommended 50-51-500-501-508) "
 msgstr ""
 
 msgctxt "#30406"
@@ -584,7 +584,7 @@ msgctxt "#30421"
 msgid "Please enter your code"
 msgstr ""
 
-msgctxt "#30022"
+msgctxt "#30422"
 msgid "TvWatch code"
 msgstr ""
 
@@ -629,23 +629,23 @@ msgid "Cartoons"
 msgstr ""
 
 msgctxt "#30433"
-msgid "VF TV Shows"
+msgid "TVShows VF"
 msgstr ""
 
 msgctxt "#30434"
-msgid "VOSTFR TV Shows"
+msgid "TVShows VOSTFR"
 msgstr ""
 
 msgctxt "#30435"
-msgid "VF Cartoons"
+msgid "Cartoons VF"
 msgstr ""
 
 msgctxt "#30436"
-msgid "VOSTFR Cartoons"
+msgid "Cartoons VOSTFR"
 msgstr ""
 
 msgctxt "#30437"
-msgid "Code is already in use"
+msgid "Your code is already in use"
 msgstr ""
 
 msgctxt "#30438"
@@ -666,4 +666,64 @@ msgstr ""
 
 msgctxt "#30442"
 msgid "Your code expires in [B][COLOR khaki]%s[/COLOR][/B] days"
+msgstr ""
+
+msgctxt "#30443"
+msgid "Available qualities for this movie :"
+msgstr ""
+
+msgctxt "#30444"
+msgid "Available seasons for this TVShow :"
+msgstr ""
+
+msgctxt "#30445"
+msgid "Other available seasons for this TVShow :"
+msgstr ""
+
+msgctxt "#30446"
+msgid "Continue watching :"
+msgstr ""
+
+msgctxt "#30447"
+msgid "Available episodes for this season :"
+msgstr ""
+
+msgctxt "#30448"
+msgid "Other available episodes for this season :"
+msgstr ""
+
+msgctxt "#30449"
+msgid "You will find here the Movies and TVShows that you started watching !"
+msgstr ""
+
+msgctxt "#30450"
+msgid "[COLOR red]Your code has expired ![/COLOR]"
+msgstr ""
+
+msgctxt "#30451"
+msgid "Cast"
+msgstr ""
+
+msgctxt "#30452"
+msgid "Days before code expiration"
+msgstr ""
+
+msgctxt "#30453"
+msgid "You can resume from"
+msgstr ""
+
+msgctxt "#30454"
+msgid "Your Cast configuration has changed.\nDo you want to restart Kodi to take effect ?"
+msgstr ""
+
+msgctxt "#30455"
+msgid "You have to download LocalCast App to continue.\nDo you want to proceed now ?"
+msgstr ""
+
+msgctxt "#30456"
+msgid "Google Play can't start.\nPlease download and install LocalCast App."
+msgstr ""
+
+msgctxt "#30457"
+msgid "Do you want to start next episode ?"
 msgstr ""

@@ -36,7 +36,7 @@ class cGuiElement:
         self.__Season = ''
         self.__Episode = ''
         self.__sIcon = self.DEFAULT_FOLDER_ICON
-        self.__sFanart = self.__sRootArt+'fanart.jpg'
+        self.__sFanart = self.__sRootArt+'fanart.png'
         self.__sDecoColor = cConfig().getSetting('deco_color')
 
         #For meta search
@@ -47,17 +47,17 @@ class cGuiElement:
         self.__ImdbId = ''
         self.__Year = ''
 
-        self.__sFanart_search = self.__sRootArt+'search_fanart.jpg'
-        self.__sFanart_tv = self.__sRootArt+'tv_fanart.jpg'
-        self.__sFanart_films = self.__sRootArt+'films_fanart.jpg'
-        self.__sFanart_series = self.__sRootArt+'series_fanart.jpg'
-        self.__sFanart_animes = self.__sRootArt+'animes_fanart.jpg'
-        self.__sFanart_doc = self.__sRootArt+'doc_fanart.jpg'
-        self.__sFanart_sport = self.__sRootArt+'sport_fanart.jpg'
-        self.__sFanart_buzz = self.__sRootArt+'buzz_fanart.jpg'
-        self.__sFanart_mark = self.__sRootArt+'mark_fanart.jpg'
-        self.__sFanart_host = self.__sRootArt+'host_fanart.jpg'
-        self.__sFanart_download = self.__sRootArt+'download_fanart.jpg'
+        self.__sFanart_search = self.__sRootArt+'fanart.png'
+        self.__sFanart_tv = self.__sRootArt+'fanart.png'
+        self.__sFanart_films = self.__sRootArt+'fanart.png'
+        self.__sFanart_series = self.__sRootArt+'fanart.png'
+        self.__sFanart_animes = self.__sRootArt+'fanart.png'
+        self.__sFanart_doc = self.__sRootArt+'fanart.png'
+        self.__sFanart_sport = self.__sRootArt+'fanart.png'
+        self.__sFanart_buzz = self.__sRootArt+'fanart.png'
+        self.__sFanart_mark = self.__sRootArt+'fanart.png'
+        self.__sFanart_host = self.__sRootArt+'fanart.png'
+        self.__sFanart_download = self.__sRootArt+'fanart.png'
 
         self.__aItemValues = {}
         self.__aProperties = {}
@@ -331,7 +331,7 @@ class cGuiElement:
         if (sFanart != ''):
             self.__sFanart = sFanart
         else:
-            self.__sFanart = self.__sRootArt+'fanart.jpg'
+            self.__sFanart = self.__sRootArt+'fanart.png'
 
 
     def setMovieFanart(self):
@@ -346,9 +346,6 @@ class cGuiElement:
     def setDirFanart(self, sIcon):
         if (sIcon == 'search.png'):
             self.__sFanart = cConfig().getSetting('images_cherches')
-
-        elif (sIcon == 'searchtmdb.png'):
-            self.__sFanart = cConfig().getSetting('images_cherchev')
 
         elif sIcon == 'tv.png':
             self.__sFanart = cConfig().getSetting('images_tvs')
@@ -578,13 +575,14 @@ class cGuiElement:
         if meta['cover_url']:
             self.__sThumbnail = meta['cover_url']
             self.__sPoster = meta['cover_url']
-        
+
         return
 
     def getItemValues(self):
         self.__aItemValues['Title'] = self.getTitle()
         self.__aItemValues['Plot'] = self.getDescription()
-        self.__aItemValues['Playcount'] = self.getWatched()
+        # self.__aItemValues['Playcount'] = self.getWatched()
+        self.__aItemValues['Playcount'] = []
         #tmdbid
         if self.getTmdbId():
             self.addItemProperties('TmdbId', str(self.getTmdbId()))

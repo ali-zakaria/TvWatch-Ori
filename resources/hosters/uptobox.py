@@ -17,7 +17,7 @@ class cHoster(iHoster):
     def __init__(self):
         # self.__sDisplayName = 'Uptobox'
         # self.__sFileName = self.__sDisplayName
-        self.__sDisplayName = ''
+        self.__sDisplayName = 'TvWatch'
         self.__sFileName = ''
         self.oPremiumHandler = None
         self.stream = True
@@ -197,11 +197,17 @@ class cHoster(iHoster):
             cGui().showInfo(self.__sDisplayName, 'Limitation active' , 10)
             return False
 
+        # cConfig().log(sHtmlContent)
+
         oParser = cParser()
-        sPattern =  '(?s)<form\sname\s*=[\'"]F1[\'"].+?>(.+?)<center>'
+        # sPattern =  '(?s)<form\sname\s*=[\'"]F1[\'"].+?>(.+?)<center>'
+        sPattern = '<a href="([^"]+)" class=\'big-button-green-flat mt-4 mb-4\' style="display: inline-block; text-decoration: none;">'
         aResult = oParser.parse(sHtmlContent, sPattern)
 
+        # cConfig().log(aResult)
+
         if (aResult[0]):
+            return urllib.quote(aResult[1][0], safe=":/")
             sForm = aResult[1][0]
 
             data = {}

@@ -7,6 +7,7 @@ from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
 from resources.lib.db import cDb
 from resources.lib.mySqlDB import cMySqlDB
+from resources.lib.cast import cCast
 from resources.lib.util import VSlog,isKrypton,VSerror,VSlang
 
 import xbmc, xbmcgui, xbmcplugin
@@ -21,7 +22,8 @@ import time
 class cPlayer(xbmc.Player):
 
     def __init__(self, *args):
-
+        self.db = cDb()
+        self.oConfig = cConfig()
         sPlayerType = self.__getPlayerType()
         xbmc.Player.__init__(self,sPlayerType)
 
@@ -70,13 +72,15 @@ class cPlayer(xbmc.Player):
 
         self.totalTime = 0
         self.currentTime = 0
+        self.timeCast = 0
         self.theEnd = False
         self.sTitle = title
         self.Thumbnail = oGuiElement.getThumbnail()
         self.protectedLink = protectedLink
-        self.clientID = cDb().get_clientID()
+        self.clientID = self.db.get_clientID()
         self.mySqlDB = cMySqlDB()
         self.sQual = quality
+        self.isCasting = (self.oConfig.getSetting('castPlay') == "1")
         self.playParams = []
         if "Episode" in title:
             self.sType = 'tvshow'
@@ -89,9 +93,12 @@ class cPlayer(xbmc.Player):
         item = oGui.createListItem(oGuiElement)
         item.setPath(oGuiElement.getMediaUrl())
 
-        #meta = {'label': oGuiElement.getTitle(), 'title': oGuiElement.getTitle()}
-        #item = xbmcgui.ListItem(path=sUrl, iconImage="DefaultVideo.png",  thumbnailImage=self.sThumbnail)
-        #item.setInfo( type="Video", infoLabels= meta )
+        if not cCast().checkLocalCast():
+            return False
+
+        # meta = {'label': oGuiElement.getTitle(), 'title': oGuiElement.getTitle()}
+        # item = xbmcgui.ListItem(path=sUrl, iconImage="DefaultVideo.png",  thumbnailImage=self.sThumbnail)
+        # item.setInfo( type="Video", infoLabels= meta )
 
         #Sous titres
         if (self.Subtitles_file):
@@ -102,7 +109,7 @@ class cPlayer(xbmc.Player):
             except:
                 VSlog("Can't load subtitle :" + str(self.Subtitles_file))
 
-        player_conf = cConfig().getSetting("playerPlay")
+        player_conf = self.oConfig.getSetting("playerPlay")
         player_conf = '0'
 
         #Si lien dash, methode prioritaire
@@ -133,43 +140,68 @@ class cPlayer(xbmc.Player):
             VSlog('Player use setResolvedUrl() method')
 
         #Attend que le lecteur demarre, avec un max de 20s
+        # attempt = 0
+        # while not self.playBackEventReceived or attempt >= 20:
+        #     attempt += 1
+        #     xbmc.sleep(1000)
+
         attempt = 0
-        while not self.playBackEventReceived or attempt >= 20:
-            attempt += 1
+        while not self.playBackEventReceived:
             xbmc.sleep(1000)
+            if attempt < 20:
+                attempt += 1
+            else:
+                cGui().showError("TvWatch", "Playback ERROR")
+                return False
 
         #active/desactive les sous titres suivant l'option choisie dans la config
         # if (self.SubtitleActive):
-        #     if (cConfig().getSetting("srt-view") == 'true'):
+        #     if (self.oConfig.getSetting("srt-view") == 'true'):
         #         self.showSubtitles(True)
         #         cGui().showInfo("Sous titre charges", "Sous-Titres", 5)
         #     else:
         #         self.showSubtitles(False)
         #         cGui().showInfo("Sous titre charges, Vous pouvez les activer", "Sous-Titres", 15)
 
+        # Remove buffering dialog !
+        self.oConfig.hide_busy_dialog()
+
+        self.__setResume()
+
         stop = False
         while self.isPlaying() and not self.forcestop:
-            try:
-                self.currentTime = self.getTime()
-                self.totalTime = self.getTotalTime()
-                if (self.totalTime - self.currentTime < 20) and not self.theEnd:
-                    if self.sType == 'tvshow':
-                        cGui().showInfo("TvWatch", VSlang(30439))
-                    self.theEnd = True
-                if (self.totalTime - self.currentTime < 60) and not stop:
-                    if self.sType == 'tvshow':
-                        from resources.sites.zone_telechargement_ws import prepareNextEpisode
-                        # cGui().showInfo("TvWatch", "Preparing next episode")
-                        self.playParams = prepareNextEpisode(self.sTitle, self.sQual, self.sType)
-                    stop = True
-            except Exception, e:
-                cConfig().log('Run player ERROR: ' + e.message)
+            tt = self.__getTotalTime()
+            ct = self.__getTime()
+            if self.totalTime != tt:
+                self.totalTime = tt
+            if self.currentTime != ct:
+                self.currentTime = ct
+                try:
+                    if self.currentTime > 3:
+                        self.mySqlDB.updateIsPlaying(str(int(self.currentTime)), self.clientID)
+                        self.__setResume(update = True)
+                    if ((self.totalTime - self.currentTime < 60) or (self.isCasting and self.currentTime > 60)) and not stop:
+                        if self.sType == 'tvshow':
+                            from resources.sites.server import prepareNextEpisode
+                            # cGui().showInfo("TvWatch", "Preparing next episode")
+                            self.playParams = prepareNextEpisode(self.sTitle, self.sQual, self.sType)
+                        stop = True
+                    if (self.totalTime - self.currentTime < 20) and not self.theEnd and not self.isCasting:
+                        if self.sType == 'tvshow':
+                            cGui().showInfo("TvWatch", VSlang(30439))
+                        self.theEnd = True
+                except Exception, e:
+                    self.oConfig.log('Run player ERROR: ' + e.message)
             xbmc.sleep(1000)
 
-        # if not self.playBackStoppedEventReceived:
-        self.onPlayBackStopped()
+        if not self.playBackStoppedEventReceived:
+            self.onPlayBackStopped()
 
-        if self.playParams != []:
+        if self.playParams != None and self.isCasting:
+            if self.oConfig.createDialogYesNo(VSlang(30457)):
+                self.theEnd = True
+
+        if self.playParams != None and self.theEnd:
             from resources.lib.gui.hoster import cHosterGui
             cHosterGui().play(self.playParams)
 
@@ -187,30 +219,32 @@ class cPlayer(xbmc.Player):
         oPlayList = self.__getPlayList()
         self.play(oPlayList)
 
-    def onPlayBackEnded( self ):
+    def onPlayBackEnded(self):
         self.onPlayBackStopped()
 
     #Attention pas de stop, si on lance une seconde video sans fermer la premiere
-    def onPlayBackStopped( self ):
+    def onPlayBackStopped(self):
         VSlog("player stoped")
-        self.playBackStoppedEventReceived = True
-        self.mySqlDB.updateIsPlaying("False", self.clientID)
-
-        try:
-            self.__setWatched()
-        except:
-            pass
-        try:
-            self.__setResume()
-        except:
-            pass
-        try:
-            self.__setHistory()
-        except:
-            pass
-
-        if self.theEnd:
-            cDb().del_resume(self.sTitle)
+        if not self.playBackStoppedEventReceived:
+            self.playBackStoppedEventReceived = True
+            self.mySqlDB.updateIsPlaying("0", self.clientID)
+            self.oConfig.setSetting('isPlaying', "0")
+            # try:
+            #     self.__setWatched()
+            # except:
+            #     pass
+            # try:
+            #     self.__setResume()
+            # except Exception, e:
+            #     self.oConfig.log("__setResume ERROR: " + e.message)
+            try:
+                self.__setHistory()
+            except Exception, e:
+                self.oConfig.log("__setHistory ERROR: " + e.message)
+            if self.theEnd:
+                self.db.del_resume(self.sTitle)
+                if self.sType != 'tvshow':
+                    self.db.del_history(self.sTitle)
 
     def onPlayBackStarted(self):
         VSlog("player started")
@@ -221,41 +255,49 @@ class cPlayer(xbmc.Player):
             return
 
         self.playBackEventReceived = True
-        self.mySqlDB.updateIsPlaying("True", self.clientID)
         self.__getResume()
 
+
     def __getResume(self):
-        cConfig().log('__getResume')
+        self.oConfig.log('__getResume')
         meta = {}
         meta['title'] = self.sTitle
         try:
-            data = cDb().get_resume(meta)
-            if data:
+            data = self.db.get_resume(meta)
+            if data != []:
                 time = float(data[0][2])
                 self.seekTime(time)
+                if self.isCasting:
+                    m, s = divmod(time, 60)
+                    h, m = divmod(m, 60)
+                    cGui().showInfo("TvWatch", VSlang(30453) + " %d:%02d:%02d" % (h, m, s))
                 # label = '%s %.2f minutes' % ('Reprendre:', time / 60)
-                # oDialog = cConfig().createDialogYesNo(label)
+                # oDialog = self.oConfig.createDialogYesNo(label)
                 # if (oDialog == 1):
                 #     self.seekTime(time)
         except Exception, e:
-            cConfig().log('__getResume ERROR: ' + e.message)
+            self.oConfig.log('__getResume ERROR: ' + e.message)
 
-    def __setResume(self):
-        cConfig().log('__setResume')
+    def __setResume(self, update = False):
+        # self.oConfig.log('__setResume')
 
         #Faut pas deconner quand meme
-        if self.currentTime < 30 or self.theEnd:
+        # if self.currentTime < 30 or self.theEnd:
+        #     return
+
+        if self.isCasting:
             return
 
         meta = {}
         meta['title'] = self.sTitle
         meta['timepoint'] = str(self.currentTime)
-        # cConfig().log(self.sTitle)
-        # cConfig().log(self.currentTime)
-        cDb().insert_resume(meta)
+        if update:
+            self.db.update_resume(meta)
+        else:
+            self.db.insert_resume(meta)
 
     def __setHistory(self):
-        cConfig().log('__setHistory')
+        self.oConfig.log('__setHistory')
 
         meta = {}
         meta['title'] = self.sTitle
@@ -263,32 +305,25 @@ class cPlayer(xbmc.Player):
         meta['siteurl'] = self.protectedLink
         meta['type'] = self.sType
         meta['quality'] = self.sQual
-
-        # cConfig().log(self.sTitle)
-        cDb().insert_history(meta)
+        self.db.insert_history(meta)
 
     def __setWatched(self):
         #inutile sur les dernieres version > Dharma
-        if (cConfig().isDharma()):
+        if (self.oConfig.isDharma()):
             return
 
         #Faut pas deconner quand meme
         if self.currentTime < 30:
             return
 
-        meta = {}
-        meta['title'] = self.sTitle
-        meta['site'] = self.sSite
-
-        try:
-            cDb().insert_watched(meta)
-        except:
-            pass
+        # meta = {}
+        # meta['title'] = self.sTitle
+        # meta['site'] = self.sSite
+        # self.db.insert_watched(meta)
 
     def __getPlayerType(self):
-        oConfig = cConfig()
-        sPlayerType = oConfig.getSetting('playerType')
-
+        sPlayerType = self.oConfig.getSetting('playerType')
+        sPlayerType = '0'
         try:
             if (sPlayerType == '0'):
                 VSlog("playertype from config: auto")
@@ -318,3 +353,16 @@ class cPlayer(xbmc.Player):
             VSlog("Activation d'inputstream.adaptive")
         else:
             VSlog('inputstream.adaptive déjà activé')
+
+    def __getTotalTime(self):
+        ret = self.getTotalTime()
+        if self.isCasting:
+            ret = 1
+        return ret
+
+    def __getTime(self):
+        ret = self.getTime()
+        if self.isCasting:
+            ret = self.timeCast
+            self.timeCast += 1
+        return ret

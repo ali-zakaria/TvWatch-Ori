@@ -604,7 +604,7 @@ class cDownload:
                 oGuiElement.setFunction('ReadDownload')
             oGuiElement.setTitle(sTitle)
             oGuiElement.setIcon('download.png')
-            oGuiElement.setFanart(cConfig().getRootArt()+'download_fanart.jpg')
+            oGuiElement.setFanart(cConfig().getRootArt()+'fanart.png')
             oGuiElement.setMeta(0)
             oGuiElement.setThumbnail(thumbnail)
 

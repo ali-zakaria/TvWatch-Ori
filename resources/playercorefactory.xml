@@ -1,0 +1,99 @@
+<playercorefactory>
+    <players>
+        <player name="MXPlayerFree" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.mxtech.videoplayer.ad</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="MXPlayerPro" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.mxtech.videoplayer.pro</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="TPlayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.tiantian.android.player.app</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="DicePlayerFree" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.inisoft.mediaplayer.trial</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="VLCPlayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.vlcforandroid.vlcdirectprofree</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="DicePlayerPaid" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.inisoft.mediaplayer.a</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="RockPlayerLite" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.redirectin.rockplayer.android.unified.lite</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="RockPlayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.rockplayer</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="BSPlayerFree" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.bsplayer.bspandroid.free</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="MoboplayerFree" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.clov4r.android.nilz</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="mVideoplayerFree" type="ExternalPlayer" audio="false" video="true">
+            <filename>afzkl.development.mVideoPlayer</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="Vplayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>me.abitno.vplayer.t</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="WondersharePlayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.wondershare.player</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="ArchosVideo" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.archos.mediacenter.video</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="SopCast" type="ExternalPlayer" audio="false" video="true">
+            <filename>org.sopcast.android</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="LocalCast" type="ExternalPlayer" audio="false" video="true">
+            <filename>de.stefanpledl.localcast</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+
+        <player name="DaroonPlayer" type="ExternalPlayer" audio="false" video="true">
+            <filename>com.daroonplayer.dsplayer</filename>
+            <hidexbmc>true</hidexbmc>
+        </player>
+    </players>
+
+    <rules action="prepend">
+        <rule protocols="smb" player="LocalCast" />
+        <rule dvdimage="true" player="LocalCast"/>
+        <rule protocols="rtmp" player="LocalCast"/>
+        <rule protocols="rtsp" player="LocalCast" />
+        <rule protocols="sop" player="LocalCast" />
+        <rule internetstream="true" player="LocalCast" />
+        <rule video="true" player="LocalCast"/> <!-- Default for anything else not listed -->
+    </rules>
+
+</playercorefactory>

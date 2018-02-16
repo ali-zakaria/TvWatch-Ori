@@ -24,7 +24,7 @@
 				<posx>0</posx>
 				<posy>0</posy>
               	<fadetime>200</fadetime>
-				<texture fallback="fanart.jpg">$INFO[Window(Home).Property(ListItem.backdrop_url)]</texture>
+				<texture fallback="fanart.png">$INFO[Window(Home).Property(ListItem.backdrop_url)]</texture>
               	<aspectratio align="center" aligny="center" scalediffuse="false">scale</aspectratio>
 			</control>
 

@@ -88,13 +88,14 @@ class cConfig():
             self.__oPath = self.__oSettings.getAddonInfo("path")
             self.__oName = self.__oSettings.getAddonInfo("name")
             self.__oCache = xbmc.translatePath(self.__oSettings.getAddonInfo("profile"))
+            self.__sRoot = os.path.join(self.__oPath, 'resources', '')
             self.__sRootArt = os.path.join(self.__oPath, 'resources' , 'art', '')
             self.__sIcon = os.path.join(self.__oPath,'resources', 'art','icon.png')
-            self.__sFanart = os.path.join(self.__oPath,'resources','art','fanart.jpg')
+            self.__sFanart = os.path.join(self.__oPath,'resources','art','fanart.png')
             self.__sFileFav = os.path.join(self.__oCache,'favourite.db').decode("utf-8")
             self.__sFileDB = os.path.join(self.__oCache,'tvwatch.db').decode("utf-8")
             self.__sFileCache = os.path.join(self.__oCache,'metadata.db').decode("utf-8")
-
+            self.__sUserData = xbmc.translatePath('special://masterprofile')
 
     def isDharma(self):
         return self.__bIsDharma
@@ -117,6 +118,9 @@ class cConfig():
     def getRootArt(self):
         return self.__sRootArt
 
+    def getRootPath(self):
+        return self.__sRoot
+
     def getAddonVersion(self):
         return self.__oVersion
 
@@ -135,6 +139,9 @@ class cConfig():
     def getFileFanart(self):
         return self.__sFanart
 
+    def getUserDataPath(self):
+        return self.__sUserData
+
     def showSettingsWindow(self):
         if (self.__bIsDharma):
             self.__oSettings.openSettings()
@@ -152,6 +159,22 @@ class cConfig():
                 return xbmcplugin.getSetting(sName)
             except:
 		return ''
+
+    def getCurrentDate(self):
+        from datetime import date
+        dateOfToday = date.today()
+        try:
+            from urllib2 import urlopen
+            res = urlopen('http://just-the-time.appspot.com/')
+            time_str = res.read().strip()
+            nowDay, nowTime = time_str.split(" ")
+            y,m,d = nowDay.split("-")
+            if int(y)>2017 and int(m)>0 and int(m)<13 and int(d)>0 and int(d)<32:
+                dateOfToday = date(int(y), int(m), int(d))
+        except:
+            pass
+        return dateOfToday
+
 
     def html_decode(self, s):
         htmlCodes = [
@@ -258,10 +281,10 @@ class cConfig():
     def update(self):
         xbmc.executebuiltin("Container.Refresh")
 
-    def show_busy_dialog():
+    def show_busy_dialog(self):
         xbmc.executebuiltin('ActivateWindow(busydialog)')
 
-    def hide_busy_dialog():
+    def hide_busy_dialog(self):
         xbmc.executebuiltin('Dialog.Close(busydialog)')
         while xbmc.getCondVisibility('Window.IsActive(busydialog)'):
             xbmc.sleep(100)

@@ -54,7 +54,7 @@ class cAbout:
             time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
             #pour test
             #time_service = time_service - datetime.timedelta(hours=50)
-            if (time_now - time_service > time_sleep or True):
+            if (time_now - time_service > time_sleep):
                 self.checkupdate()
             else:
                 cConfig().log('Prochaine verification de MAJ le : ' + str(time_sleep + time_service) )

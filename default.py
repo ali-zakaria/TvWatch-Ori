@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-#Primatech.
+# Primatech.
 # https://github.com/Kodi-TvWatch/primatech-xbmc-addons
 
 from resources.lib.statistic import cStatistic
@@ -14,9 +14,9 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.config import cConfig
 from resources.lib.config import GestionCookie
 from resources.lib.db import cDb
-from resources.lib.mySqlDB import cMySqlDB
 from resources.lib.util import cUtil
 from resources.lib.authentification import cAuthentification
+from resources.lib.cast import cCast
 
 import xbmc, xbmcgui, sys
 
@@ -25,16 +25,14 @@ import xbmc, xbmcgui, sys
 
 class main:
     def __init__(self):
+        self.oConfig = cConfig()
+        cCast().updateCast()
         self.parseUrl()
         cDb()._create_tables()
-        cConfig().log('Constructor of default.py')
-
-    # def __del__(self):
-    #     cMySqlDB().updateIsPlaying("False", cDb().get_clientID())
-    #     cConfig().log('Destructor of default.py')
+        self.oConfig.log('Constructor of default.py')
 
     def parseUrl(self):
-        cConfig().log('call parseUrl methode')
+        self.oConfig.log('call parseUrl methode')
 
         # try:
         #     from resources.lib.about import cAbout
@@ -61,14 +59,14 @@ class main:
                 from resources.lib.about import cAbout
                 cAbout().getUpdate()
             except Exception, e:
-                cConfig().log('getUpdate ERROR: ' + e.message)
+                self.oConfig.log('getUpdate ERROR: ' + e.message)
 
             #charge home
             #plugins = __import__('resources.lib.home', fromlist=['home']).cHome()
             #function = getattr(plugins, 'showSources')
-            cConfig().log('In default.py call load')
-            from resources.sites.zone_telechargement_ws import load
-            load() #zone_telechargement_ws
+            self.oConfig.log('In default.py call load')
+            from resources.sites.server import load
+            load() #server
 
             return
 
@@ -79,7 +77,7 @@ class main:
                 sTitle = oInputParameterHandler.getValue('title')
             else: sTitle = "none";
 
-            cConfig().log('load site ' + sSiteName + ' and call function ' + sFunction)
+            self.oConfig.log('load site ' + sSiteName + ' and call function ' + sFunction)
             cStatistic().callStartPlugin(sSiteName, sTitle)
 
 
@@ -128,7 +126,8 @@ class main:
                 return
 
             if sSiteName == 'globalParametre':
-                cConfig().showSettingsWindow()
+                self.oConfig.showSettingsWindow()
+                cCast().updateCast()
                 return
             #if (isAboutGui(sSiteName, sFunction) == True):
                 #return
@@ -141,13 +140,13 @@ class main:
                 function = getattr(plugins, sFunction)
                 function()
             except Exception as e:
-                cConfig().log('could not load site: ' + sSiteName + ' error: ' + str(e))
+                self.oConfig.log('could not load site: ' + sSiteName + ' error: ' + str(e))
                 try:
                     plugins = __import__('resources.lib.gui.%s' % sSiteName, fromlist=[sSiteName])
                     function = getattr(plugins, sFunction)
                     function()
                 except Exception as e:
-                    cConfig().log('could not load gui: ' + sSiteName + ' error: ' + str(e))
+                    self.oConfig.log('could not load gui: ' + sSiteName + ' error: ' + str(e))
                 import traceback
                 traceback.print_exc()
                 return
@@ -224,19 +223,19 @@ def searchGlobal():
 
     #xbmc.log(str(aPlugins), xbmc.LOGNOTICE)
 
-    dialog = cConfig().createDialog("TvWatch")
+    dialog = self.oConfig.createDialog("TvWatch")
     #kodi 17 vire la fenetre busy qui ce pose au dessus de la barre de Progress
     try:
         xbmc.executebuiltin("Dialog.Close(busydialog)")
     except: pass
     xbmcgui.Window(10101).setProperty('search', 'true')
 
-    oGui.addText('globalSearch', cConfig().getlanguage(30081) % (sSearchText), 'none.png')
+    oGui.addText('globalSearch', self.oConfig.getlanguage(30081) % (sSearchText), 'none.png')
 
     for count, plugin in enumerate(aPlugins):
 
         text = '%s/%s - %s' % ((count+1), total, plugin['name'])
-        cConfig().updateDialogSearch(dialog, total, text)
+        self.oConfig.updateDialogSearch(dialog, total, text)
         if dialog.iscanceled():
             cancel = True
             dialog.close()
@@ -258,9 +257,9 @@ def searchGlobal():
         text = '%s/%s - %s' % ((count+1/total), total, result['guiElement'].getTitle())
 
         if(count == 0):
-            cConfig().updateDialogSearch(dialog, total, text,True)
+            self.oConfig.updateDialogSearch(dialog, total, text,True)
         else:
-            cConfig().updateDialogSearch(dialog, total, text)
+            self.oConfig.updateDialogSearch(dialog, total, text)
 
         #result['params'].addParameter('VSTRMSEARCH','True')
 
@@ -273,7 +272,7 @@ def searchGlobal():
             else:
                 break
 
-    cConfig().finishDialog(dialog)
+    self.oConfig.finishDialog(dialog)
 
     oGui.setEndOfDirectory()
 
@@ -285,8 +284,8 @@ def _pluginSearch(plugin, sSearchText):
         function = getattr(plugins, plugin['search'][1])
         sUrl = plugin['search'][0]+str(sSearchText)
         function(sUrl)
-        cConfig().log("Load Recherche: " + str(plugin['identifier']))
+        self.oConfig.log("Load Recherche: " + str(plugin['identifier']))
     except:
-        cConfig().log(plugin['identifier']+': search failed')
+        self.oConfig.log(plugin['identifier']+': search failed')
 
 main()

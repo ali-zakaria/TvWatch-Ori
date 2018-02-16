@@ -11,7 +11,7 @@ from resources.lib.player import cPlayer
 from resources.lib.db import cDb
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.config import cConfig
-from resources.lib import util
+from resources.lib.util import VSlog
 
 class cHosterGui:
 
@@ -108,20 +108,19 @@ class cHosterGui:
         if (False):
             sMediaUrl = self.__getRedirectUrl(sMediaUrl)
 
-        util.VSlog("Hoster - play " + sMediaUrl)
+        VSlog("Hoster - play " + sMediaUrl)
 
         oHoster = self.getHoster(sHosterIdentifier)
         oHoster.setFileName(sFileName)
 
         sHosterName = oHoster.getDisplayName()
-        #cConfig().showInfo(sHosterName, 'Resolve')
+        # cConfig().showInfo(sHosterName, 'Resolve')
 
         try:
-
             oHoster.setUrl(sMediaUrl)
             aLink = oHoster.getMediaLink()
 
-            if (aLink[0] == True):
+            if aLink[0]:
                 oGuiElement = cGuiElement()
                 oGuiElement.setSiteName(self.SITE_NAME)
                 oGuiElement.setMediaUrl(aLink[1])
@@ -161,7 +160,7 @@ class cHosterGui:
         if (bGetRedirectUrl == 'True'):
             sMediaUrl = self.__getRedirectUrl(sMediaUrl)
 
-        util.VSlog("Hoster - play " + sMediaUrl)
+        VSlog("Hoster - play " + sMediaUrl)
         oHoster = self.getHoster(sHosterIdentifier)
         oHoster.setFileName(sFileName)
 

@@ -9,7 +9,11 @@ class cMySqlDB:
 
     def __init__(self):
         try:
-            self.db = mysql.connector.connect(host="sql11.freemysqlhosting.net",user="sql11217561",password="Wdfqrjffkk", database="sql11217561")
+            self.db = mysql.connector.connect(host="sql11.freemysqlhosting.net", \
+                                              user="sql11217561", \
+                                              password="Wdfqrjffkk", \
+                                              database="sql11217561", \
+                                              connection_timeout=10)
             self.dbcur = self.db.cursor()
             # self.deleteTable()
             # self.log("Init cMySqlDB SUCCESS")
@@ -35,9 +39,9 @@ class cMySqlDB:
                     );"""
         try:
             self.dbcur.execute(sql_create)
-            self.log('Table MySQL initialized')
+            self.log('Table mainTable MySQL initialized')
         except Exception, e:
-            self.log('MySQL ERROR _create_tables: ' + e.message)
+            self.log('MySQL ERROR _create_tables mainTable: ' + e.message)
 
     #***********************************
     #   history fonctions

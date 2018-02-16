@@ -6,6 +6,7 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 import os, sys
 import urllib
 import xbmc
+import base64
 
 SITE_IDENTIFIER = 'cDb'
 SITE_NAME = 'DB'
@@ -62,22 +63,31 @@ class cDb:
         cConfig().log('Table initialized')
 
     #Ne pas utiliser cette fonction pour les chemins
+    # def str_conv2(self, data):
+    #     if isinstance(data, str):
+    #         # Must be encoded in UTF-8
+    #         data = data.decode('utf8')
+    #     import unicodedata
+    #     data = unicodedata.normalize('NFKD', data).encode('ascii','ignore')
+    #     data = data.decode('string-escape') #ATTENTION : provoque des bugs pour les chemins a cause du caractere '/'
+    #     return data
+
     def str_conv(self, data):
-        if isinstance(data, str):
-            # Must be encoded in UTF-8
-            data = data.decode('utf8')
-
-        import unicodedata
-        data = unicodedata.normalize('NFKD', data).encode('ascii','ignore')
-        data = data.decode('string-escape') #ATTENTION : provoque des bugs pour les chemins a cause du caractere '/'
-
+        # data = data.replace("'", "")
+        # data = data.replace("-", "")
+        # data = data.rstrip()
+        # data = data.replace(" ", "_")
+        # data = data.decode('utf-8')
+        data = base64.b16encode(data)
         return data
 
-    def str_conv2(self, data):
-        data = data.replace("'", "")
-        data = data.replace("-", "")
-        data = data.rstrip()
-        data = data.replace(" ", "_")
+    def str_deconv(self, data):
+        # data = data.replace("'", "")
+        # data = data.replace("-", "")
+        # data = data.rstrip()
+        # data = data.replace(" ", "_")
+        # data = data.encode('utf-8')
+        data = base64.b16decode(data)
         return data
 
     #***********************************
@@ -85,9 +95,8 @@ class cDb:
     #***********************************
 
     def insert_resume(self, meta):
-        title = self.str_conv2(meta['title'])
+        title = self.str_conv(meta['title'])
         timepoint = meta['timepoint']
-
         try:
             ex = "INSERT INTO resume (title, timepoint) VALUES (?, ?)"
             self.dbcur.execute(ex, (title, timepoint))
@@ -99,7 +108,7 @@ class cDb:
                 self.update_resume(meta)
 
     def update_resume(self, meta):
-        title = self.str_conv2(meta['title'])
+        title = self.str_conv(meta['title'])
         timepoint = meta['timepoint']
         try:
             ex = "UPDATE resume SET timepoint = '%s' WHERE title = '%s'" % (timepoint, title)
@@ -110,7 +119,7 @@ class cDb:
             cConfig().log('SQL ERROR UPDATE resume: ' + e.message)
 
     def get_resume(self, meta):
-        title = self.str_conv2(meta['title'])
+        title = self.str_conv(meta['title'])
         sql_select = "SELECT * FROM resume WHERE title = '%s'" % (title)
         try:
             self.dbcur.execute(sql_select)
@@ -121,11 +130,12 @@ class cDb:
             return []
 
     def del_resume(self, title):
-        title = self.str_conv2(title)
+        title = self.str_conv(title)
         sql_delete = "DELETE FROM resume WHERE title = '%s'" % (title)
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()
+            cConfig().log('SQL DELETE resume Successfully')
         except Exception, e:
             cConfig().log('SQL ERROR DELETE resume: ' + e.message)
 
@@ -148,7 +158,6 @@ class cDb:
         count = 0
         site = urllib.quote_plus(meta['site'])
         sql_select = "SELECT * FROM watched WHERE site = '%s'" % (site)
-
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
@@ -162,13 +171,12 @@ class cDb:
     def del_watched(self, meta):
         site = urllib.quote_plus(meta['site'])
         sql_select = "DELETE FROM watched WHERE site = '%s'" % (site)
-
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
             return False, False
         except Exception, e:
-            cConfig().log('SQL ERROR EXECUTE watched: ' + e.message)
+            cConfig().log('SQL ERROR DELETE watched: ' + e.message)
             return False, False
 
     #***********************************
@@ -179,7 +187,6 @@ class cDb:
         title = self.str_conv(meta['title'])
         siteurl = urllib.quote_plus(meta['siteurl'])
         sIcon = meta['icon']
-
         try:
             ex = "INSERT INTO favorite (title, siteurl, site, fav, cat, icon, fanart) VALUES (?, ?, ?, ?, ?, ?, ?)"
             self.dbcur.execute(ex, (title,siteurl, meta['site'],meta['fav'],meta['cat'],sIcon,meta['fanart']))
@@ -205,7 +212,6 @@ class cDb:
 
     def del_favorite(self):
         oInputParameterHandler = cInputParameterHandler()
-
         if (oInputParameterHandler.exist('sCat')):
             sql_delete = "DELETE FROM favorite WHERE cat = '%s'" % (oInputParameterHandler.getValue('sCat'))
 
@@ -231,7 +237,6 @@ class cDb:
             return False, False
 
     def writeFavourites(self):
-
         oInputParameterHandler = cInputParameterHandler()
         sTitle = oInputParameterHandler.getValue('sTitle')
         sId = oInputParameterHandler.getValue('sId')
@@ -274,7 +279,6 @@ class cDb:
     #***********************************
 
     def insert_download(self, meta):
-
         title = self.str_conv(meta['title'])
         url = urllib.quote_plus(meta['url'])
         sIcon = urllib.quote_plus(meta['icon'])
@@ -307,9 +311,7 @@ class cDb:
             return None
 
     def clean_download(self):
-
         sql_select = "DELETE FROM download WHERE status = '2'"
-
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
@@ -319,10 +321,8 @@ class cDb:
             return False, False
 
     def reset_download(self, meta):
-
         url = urllib.quote_plus(meta['url'])
         sql_select = "UPDATE download SET status = '0' WHERE status = '2' AND url = '%s'" % (url)
-
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
@@ -360,14 +360,12 @@ class cDb:
             return False, False
 
     def update_download(self, meta):
-
         path = meta['path']
         size = meta['size']
         totalsize = meta['totalsize']
         status = meta['status']
 
         sql_select = "UPDATE download set size = '%s', totalsize = '%s', status= '%s' WHERE path = '%s'" % (size, totalsize, status, path)
-
         try:
             self.dbcur.execute(sql_select)
             self.db.commit()
@@ -387,9 +385,10 @@ class cDb:
         sType = meta['type']
         sQuality = meta['quality']
         sRawtitle = title
-        if sType == 'tvshow' and 'Saison' in title:
-            sRawtitle = title[:title.find('Saison')]
-        sRawtitle = self.str_conv2(sRawtitle)
+        title = self.str_conv(title)
+        if sType == 'tvshow' and 'Saison' in sRawtitle:
+            sRawtitle = sRawtitle[:sRawtitle.find('Saison')]
+        sRawtitle = self.str_conv(sRawtitle)
         try:
             ex = "INSERT INTO history (title, siteurl, icon, type, rawtitle, quality) VALUES (?, ?, ?, ?, ?, ?)"
             self.dbcur.execute(ex, (title, siteurl, sIcon, sType, sRawtitle, sQuality))
@@ -407,9 +406,10 @@ class cDb:
         sType = meta['type']
         sQuality = meta['quality']
         sRawtitle = title
-        if sType == 'tvshow' and 'Saison' in title:
-            sRawtitle = title[:title.find('Saison')]
-        sRawtitle = self.str_conv2(sRawtitle)
+        title = self.str_conv(title)
+        if sType == 'tvshow' and 'Saison' in sRawtitle:
+            sRawtitle = sRawtitle[:sRawtitle.find('Saison')]
+        sRawtitle = self.str_conv(sRawtitle)
         try:
             ex = "UPDATE history SET title='%s', siteurl='%s', type='%s', icon='%s', quality='%s' WHERE rawtitle='%s'" % (title, siteurl, sType, sIcon, sQuality, sRawtitle)
             self.dbcur.execute(ex)
@@ -424,6 +424,9 @@ class cDb:
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchall()
+            # for i in range(len(matchedrow)):
+            #     matchedrow[i][3] = self.str_deconv(matchedrow[i][3])
+            #     matchedrow[i][2] = self.str_deconv(matchedrow[i][2])
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR GET history: ' + e.message)
@@ -433,24 +436,30 @@ class cDb:
         sRawtitle = title
         if 'Saison' in title:
             sRawtitle = title[:title.find('Saison')]
-        sRawtitle = self.str_conv2(sRawtitle)
+        sRawtitle = self.str_conv(sRawtitle)
         sql_select = "SELECT * FROM history WHERE rawtitle = '%s'" % (sRawtitle)
         try:
             self.dbcur.execute(sql_select)
             matchedrow = self.dbcur.fetchone()
+            # for i in range(len(matchedrow)):
+            #     matchedrow[i][3] = self.str_deconv(matchedrow[i][3])
+            #     matchedrow[i][2] = self.str_deconv(matchedrow[i][2])
             return matchedrow
         except Exception, e:
             cConfig().log('SQL ERROR GET history: ' + e.message)
             return []
 
 
-    def del_history(self, sRawtitle):
-        sRawtitle = self.str_conv2(sRawtitle)
+    def del_history(self, title):
+        sRawtitle = title
+        if 'Saison' in title:
+            sRawtitle = title[:title.find('Saison')]
+        sRawtitle = self.str_conv(sRawtitle)
         sql_delete = "DELETE FROM history WHERE rawtitle = '%s'" % (sRawtitle)
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()
-            cConfig().log('del_history: successfully')
+            cConfig().log('SQL DELETE history Successfully')
         except Exception, e:
             cConfig().log('SQL ERROR DELETE history: ' + e.message)
 
@@ -481,11 +490,8 @@ class cDb:
             return None
 
 
-    def del_clientID(self, clientID = '', deleteAll = False):
-        if clientID != '':
-            sql_delete = "DELETE FROM clientIdTable WHERE clientID = '%s'" % (clientID)
-        if deleteAll:
-            sql_delete = "DELETE FROM clientIdTable;"
+    def del_clientID(self, clientID):
+        sql_delete = "DELETE FROM clientIdTable WHERE clientID = '%s'" % (clientID)
         try:
             self.dbcur.execute(sql_delete)
             self.db.commit()

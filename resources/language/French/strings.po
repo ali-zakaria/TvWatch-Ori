@@ -93,7 +93,7 @@ msgid "Play"
 msgstr "Lecture"
 
 msgctxt "#30031"
-msgid "Métadata"
+msgid "Metada"
 msgstr "Métadonnées"
 
 msgctxt "#30032"
@@ -101,8 +101,8 @@ msgid "View"
 msgstr "Affichage"
 
 msgctxt "#30033"
-msgid "Tool"
-msgstr "Outil"
+msgid "Tools"
+msgstr "Outils"
 
 msgctxt "#30034"
 msgid "About"
@@ -129,11 +129,11 @@ msgid "Search (Movie)"
 msgstr "Recherche (Films)"
 
 msgctxt "#30079"
-msgid "Search (Tvshow/Anim)"
+msgid "Search (TVShows/Cartoons)"
 msgstr "Recherche (Séries/Animés)"
 
 msgctxt "#30080"
-msgid "Search (Other category)"
+msgid "Search (Other categories)"
 msgstr "Recherche (Autre catégories)"
 
 msgctxt "#30081"
@@ -205,7 +205,7 @@ msgid "Children"
 msgstr "Enfants"
 
 msgctxt "#30112"
-msgid "Documentary"
+msgid "Documentaries"
 msgstr "Documentaires"
 
 msgctxt "#30113"
@@ -233,11 +233,11 @@ msgid "Movies"
 msgstr "Films"
 
 msgctxt "#30121"
-msgid "Tvshow"
+msgid "TVShows"
 msgstr "Séries"
 
 msgctxt "#30122"
-msgid "Animes"
+msgid "Cartoons"
 msgstr "Animés"
 
 msgctxt "#30125"
@@ -249,8 +249,8 @@ msgid "Beta Tester (not recommended)"
 msgstr "Bêta testeur (Non recommandé)"
 
 msgctxt "#30127"
-msgid "Tool"
-msgstr "Outil"
+msgid "Tools"
+msgstr "Outils"
 
 msgctxt "#30128"
 msgid "Clear Cache Addon"
@@ -266,11 +266,11 @@ msgstr "Listes"
 
 msgctxt "#30134"
 msgid "Movies VF"
-msgstr "VF"
+msgstr "Films VF"
 
 msgctxt "#30135"
 msgid "Movies VOSTFR"
-msgstr "VOSTFR"
+msgstr "Films VOSTFR"
 
 msgctxt "#30138"
 msgid "Sources"
@@ -281,7 +281,7 @@ msgid "Download folder"
 msgstr "Dossier de Téléchargement"
 
 msgctxt "#30146"
-msgid "Show / Hide search settings"
+msgid "Show/Hide search settings"
 msgstr "Afficher/Masquer les paramètres de recherche"
 
 msgctxt "#30147"
@@ -390,8 +390,8 @@ msgid "Auto update"
 msgstr "Mise a jour à chaque ajout"
 
 msgctxt "#30303"
-msgid "Enable/Disable"
-msgstr "Activer/Désactiver"
+msgid "Disable"
+msgstr "Désactiver"
 
 msgctxt "#30304"
 msgid "Go to [COLOR teal]%s[/COLOR] Enter the code [COLOR teal]%s[/COLOR]"
@@ -427,10 +427,10 @@ msgstr "A surveiller"
 
 msgctxt "#30312"
 msgid "Watch"
-msgstr "Regardé"
+msgstr "Regarder"
 
 msgctxt "#30313"
-msgid "Recommend"
+msgid "Recommended"
 msgstr "Recommandé"
 
 msgctxt "#30314"
@@ -510,7 +510,7 @@ msgid "Password"
 msgstr "Mot de passe"
 
 msgctxt "#30403"
-msgid "Activate"
+msgid "Enable"
 msgstr "Activer"
 
 msgctxt "#30404"
@@ -518,7 +518,7 @@ msgid "View : Movies (recommended 50-51-500-501-508) "
 msgstr "Vue : Films (recommandé 50-51-500-501-508) "
 
 msgctxt "#30405"
-msgid "View: Tvshow (recommended 50-51-500-501-508) "
+msgid "View: TVShows (recommended 50-51-500-501-508) "
 msgstr "Vue: Séries (recommandé 50-51-500-501-508) "
 
 msgctxt "#30406"
@@ -630,24 +630,24 @@ msgid "Cartoons"
 msgstr "Dessins Animés"
 
 msgctxt "#30433"
-msgid "VF TV Shows"
+msgid "TVShows VF"
 msgstr "Séries VF"
 
 msgctxt "#30434"
-msgid "VOSTFR TV Shows"
+msgid "TVShows VOSTFR"
 msgstr "Séries VOSTFR"
 
 msgctxt "#30435"
-msgid "VF Cartoons"
+msgid "Cartoons VF"
 msgstr "Dessins Animés VF"
 
 msgctxt "#30436"
-msgid "VOSTFR Cartoons"
+msgid "Cartoons VOSTFR"
 msgstr "Dessins Animés VOSTFR"
 
 msgctxt "#30437"
-msgid "Code is already in use"
-msgstr "Code en cours d'utilisation"
+msgid "Your code is already in use"
+msgstr "Votre code est en cours d'utilisation"
 
 msgctxt "#30438"
 msgid "No search results"
@@ -668,3 +668,63 @@ msgstr "Ajouter à ma liste"
 msgctxt "#30442"
 msgid "Your code expires in [B][COLOR khaki]%s[/COLOR][/B] days"
 msgstr "Votre code expire dans [B][COLOR khaki]%s[/COLOR][/B] jours"
+
+msgctxt "#30443"
+msgid "Available qualities for this movie :"
+msgstr "Qualités disponibles pour ce film :"
+
+msgctxt "#30444"
+msgid "Available seasons for this TVShow :"
+msgstr "Saisons disponibles pour cette série :"
+
+msgctxt "#30445"
+msgid "Other available seasons for this TVShow :"
+msgstr "Autres saisons disponibles pour cette série :"
+
+msgctxt "#30446"
+msgid "Continue watching :"
+msgstr "Continuer à regarder :"
+
+msgctxt "#30447"
+msgid "Available episodes for this season :"
+msgstr "Episodes disponibles pour cette saison :"
+
+msgctxt "#30448"
+msgid "Other available episodes for this season :"
+msgstr "Autres épisodes disponibles pour cette saison :"
+
+msgctxt "#30449"
+msgid "You will find here the Movies and TVShows that you started watching !"
+msgstr "Vous trouverez ici les Films et Séries que vous avez commencés à regarder !"
+
+msgctxt "#30450"
+msgid "[COLOR red]Your code has expired ![/COLOR]"
+msgstr "[COLOR red]Votre code a expiré ![/COLOR]"
+
+msgctxt "#30451"
+msgid "Cast"
+msgstr "Cast"
+
+msgctxt "#30452"
+msgid "Days before code expiration"
+msgstr "Jours avant l'expiration du code"
+
+msgctxt "#30453"
+msgid "You can resume from"
+msgstr "Vous pouvez reprendre à partir de"
+
+msgctxt "#30454"
+msgid "Your Cast configuration has changed.\nDo you want to restart Kodi to take effect ?"
+msgstr "Votre configuration Cast a changé.\nVoulez-vous redémarrer Kodi pour prendre effet ?"
+
+msgctxt "#30455"
+msgid "You have to download LocalCast App to continue.\nDo you want to proceed now ?"
+msgstr "Vous devez télécharger l'application LocalCast pour continuer.\nVoulez-vous la télécharger maintenant ?"
+
+msgctxt "#30456"
+msgid "Google Play can't start.\nPlease download and install LocalCast App."
+msgstr "Google Play n'a pas pu démarrer.\nTéléchargez et installez l'application LocalCast SVP."
+
+msgctxt "#30457"
+msgid "Do you want to start next episode ?"
+msgstr "Voulez-vous démarrer le prochain épisode ?"
