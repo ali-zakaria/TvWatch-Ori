@@ -23,16 +23,16 @@ class cAbout:
 
     #retourne True si les 2 fichiers sont present mais pas avec les meme tailles
     def checksize(self, filepath, size):
-        ret = False
+        res = False
         try:
             f = open(filepath)
             Content = f.read()
             f.close()
             if len(Content) != size:
-                ret = True
+                res = True
         except (OSError, IOError) as e:
             #fichier n'existe pas
-            cConfig().log("checksize ERROR: " + e.errno)
+            cConfig().log("checksize ERROR: " + e.strerror)
             # ret = False
         return res
 
@@ -132,7 +132,6 @@ class cAbout:
             oRequest =  urllib2.Request(sUrl + sRequest)
             oResponse = urllib2.urlopen(oRequest)
             sContent = oResponse.read()
-            cConfig().log(sContent)
             if "Current Version" in sContent:
                 sContent = sContent[sContent.find("Current Version"):]
                 if " - " in sContent:
@@ -206,7 +205,6 @@ class cAbout:
 
             cConfig().setSetting('service_time', str(datetime.datetime.now()))
             cConfig().setSetting('home_update', str('false'))
-            #cConfig().setSetting('service_last', str(datetime.datetime.now()))
 
             fin = cConfig().createDialogOK(sContent)
             cConfig().update()
@@ -220,7 +218,6 @@ class cAbout:
         f.write(line)
         inf.close()
         f.close()
-        return
 
     def TextBoxes(self, heading, anounce):
         class TextBox():
