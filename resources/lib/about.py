@@ -46,7 +46,7 @@ class cAbout:
 
         if (service_time):
             #delay mise a jour
-            time_sleep = datetime.timedelta(minutes=10)
+            time_sleep = datetime.timedelta(minutes=1)
             time_now = datetime.datetime.now()
             time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
             if (time_now - time_service > time_sleep):
