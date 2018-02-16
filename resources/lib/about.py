@@ -186,15 +186,16 @@ class cAbout:
             for i in result:
                 self.oConfig.updateDialog(dialog, total)
                 rootpath = self.getRootPath(i['path'])
-                if self.checksize(rootpath, i['size']):
-                    try:
-                        self.__download(i['download_url'], rootpath)
-                        site.append("[COLOR khaki]"+i['name'].encode("utf-8")+"[/COLOR]")
-                        sdown = sdown+1
-                    except:
-                        site.append("[COLOR red]"+i['name'].encode("utf-8")+"[/COLOR]")
-                        sdown = sdown+1
-                        pass
+                if i['type'] == "file":
+                    if self.checksize(rootpath, i['size']):
+                        try:
+                            self.__download(i['download_url'], rootpath)
+                            site.append("[COLOR khaki]"+i['name'].encode("utf-8")+"[/COLOR]")
+                            sdown = sdown+1
+                        except:
+                            site.append("[COLOR red]"+i['name'].encode("utf-8")+"[/COLOR]")
+                            sdown = sdown+1
+                            pass
 
             self.oConfig.finishDialog(dialog)
             sContent = "Fichier mise à jour %s / %s \n %s" %  (sdown, total, site)
