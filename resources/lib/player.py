@@ -81,7 +81,7 @@ class cPlayer(xbmc.Player):
         self.mySqlDB = cMySqlDB()
         self.sQual = quality
         self.isCasting = (self.oConfig.getSetting('castPlay') == "1")
-        self.playParams = []
+        self.playParams = None
         if "Episode" in title:
             self.sType = 'tvshow'
         else:

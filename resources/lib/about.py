@@ -3,14 +3,14 @@
 from config import cConfig
 
 import urllib, urllib2
-import xbmc, xbmcgui, xbmcaddon
-import xbmcvfs
+import xbmc, xbmcgui, xbmcaddon, xbmcvfs
 import sys, datetime, time, os
 
 sLibrary = xbmc.translatePath(cConfig().getAddonPath()).decode("utf-8")
-sys.path.append (sLibrary)
+sys.path.append(sLibrary)
 
 from resources.lib.handler.requestHandler import cRequestHandler
+from resources.lib.util import VSlog
 
 SITE_IDENTIFIER = 'about'
 SITE_NAME = 'About'
@@ -18,6 +18,7 @@ SITE_NAME = 'About'
 class cAbout:
 
     def __init__(self):
+        self.oConfig = cConfig()
         self.client_id = '85aab916fa0aa0b50a29'
         self.client_secret = '3276c40a94a9752510326873f2361e7b80df1a8e'
 
@@ -29,17 +30,17 @@ class cAbout:
                 res = True
         except (OSError, IOError) as e:
             #fichier n'existe pas
-            cConfig().log("checksize ERROR: " + e.strerror)
+            VSlog("checksize ERROR: " + e.strerror)
         return res
 
     def getUpdate(self):
-        service_time = cConfig().getSetting('service_time')
-        cConfig().log("getUpdate")
+        service_time = self.oConfig.getSetting('service_time')
+        VSlog("getUpdate")
 
         #Si pas d'heure indique = premiere install
         if not (service_time):
             #On memorise la date d'aujourdhui
-            cConfig().setSetting('service_time', str(datetime.datetime.now()))
+            self.oConfig.setSetting('service_time', str(datetime.datetime.now()))
             #Mais on force la maj avec une date a la con
             service_time = '2000-09-23 10:59:50.877000'
 
@@ -51,7 +52,7 @@ class cAbout:
             if (time_now - time_service > time_sleep):
                 self.checkupdate()
             else:
-                cConfig().log('Prochaine verification de MAJ le : ' + str(time_sleep + time_service) )
+                VSlog('Prochaine verification de MAJ le : ' + str(time_sleep + time_service) )
                 #Pas besoin de memoriser la date, a cause du cache kodi > pas fiable.
         return
 
@@ -64,9 +65,9 @@ class cAbout:
         return date
 
     def __checkversion(self):
-        service_version = cConfig().getSetting('service_version')
+        service_version = self.oConfig.getSetting('service_version')
         if (service_version):
-            version = cConfig().getAddonVersion()
+            version = self.oConfig.getAddonVersion()
             if (version > service_version):
                 try:
                     sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/changelog.txt'
@@ -74,17 +75,17 @@ class cAbout:
                     oResponse = urllib2.urlopen(oRequest)
                     sContent = oResponse.read()
                     self.TextBoxes('Changelog', sContent)
-                    cConfig().setSetting('service_version', str(cConfig().getAddonVersion()))
+                    self.oConfig.setSetting('service_version', str(self.oConfig.getAddonVersion()))
                     return
                 except:
-                    cConfig().error("%s,%s" % (cConfig().getlanguage(30205), sUrl))
+                    self.oConfig.error("%s,%s" % (self.oConfig.getlanguage(30205), sUrl))
                     return
         else:
-            cConfig().setSetting('service_version', str(cConfig().getAddonVersion()))
+            self.oConfig.setSetting('service_version', str(self.oConfig.getAddonVersion()))
             return
 
     def getRootPath(self, folder):
-        sMath = cConfig().getAddonPath().decode("utf-8")
+        sMath = self.oConfig.getAddonPath().decode("utf-8")
         sFolder = os.path.join(sMath , folder)
 
         # xbox hack
@@ -114,14 +115,14 @@ class cAbout:
                 except:
                     pass
         except Exception, e:
-            cConfig().log("resultGit ERROR: "+ e.message)
+            VSlog("resultGit ERROR: "+ e.message)
             return False
         return result
 
 
     def checkupdate(self):
-        cConfig().log("checkupdate")
-        version = cConfig().getAddonVersion()
+        VSlog("checkupdate")
+        version = self.oConfig.getAddonVersion()
         try:
             sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
             sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/changelog.txt'
@@ -137,20 +138,20 @@ class cAbout:
                     sContent = sContent.replace(".","")
                     newVersion = int(sContent)
                     currentVersion = int(version.replace(".",""))
-                    cConfig().log("checkupdate New Version: " + str(newVersion))
-                    cConfig().log("checkupdate Current Version: " + str(currentVersion))
+                    VSlog("checkupdate New Version: " + str(newVersion))
+                    VSlog("checkupdate Current Version: " + str(currentVersion))
                     if newVersion > currentVersion:
-                        cConfig().setSetting('home_update', str('true'))
-                        cConfig().setSetting('service_time', str(datetime.datetime.now()))
-                        dialog = cConfig().showInfo("TvWatch", "Mise à jour disponible")
+                        self.oConfig.setSetting('home_update', str('true'))
+                        self.oConfig.setSetting('service_time', str(datetime.datetime.now()))
+                        dialog = self.oConfig.showInfo("TvWatch", "Mise à jour disponible")
                         return True
                     else:
-                        #cConfig().showInfo('TvWatch', 'Fichier a jour')
-                        cConfig().setSetting('service_time', str(datetime.datetime.now()))
-                        cConfig().setSetting('home_update', str('false'))
+                        #self.oConfig.showInfo('TvWatch', 'Fichier a jour')
+                        self.oConfig.setSetting('service_time', str(datetime.datetime.now()))
+                        self.oConfig.setSetting('home_update', str('false'))
         except Exception, e:
-            cConfig().error(cConfig().getlanguage(30205))
-            cConfig().log("checkupdate ERROR: " + e.message)
+            self.oConfig.error(self.oConfig.getlanguage(30205))
+            VSlog("checkupdate ERROR: " + e.message)
         return False
 
     def checkHash(self):
@@ -170,20 +171,20 @@ class cAbout:
         for i in result:
                 rootpath = self.getRootPath(i['path'])
                 if self.checksize(rootpath, i['size']):
-                    cConfig().log('checkHash')
+                    VSlog('checkHash')
 
         return result == 'True'
 
     def checkdownload(self):
         result = self.resultGit()
         total = len(result)
-        dialog = cConfig().createDialog('Update')
+        dialog = self.oConfig.createDialog('Update')
         site = []
         sdown = 0
 
         if result:
             for i in result:
-                cConfig().updateDialog(dialog, total)
+                self.oConfig.updateDialog(dialog, total)
                 rootpath = self.getRootPath(i['path'])
                 if self.checksize(rootpath, i['size']):
                     try:
@@ -195,15 +196,15 @@ class cAbout:
                         sdown = sdown+1
                         pass
 
-            cConfig().finishDialog(dialog)
+            self.oConfig.finishDialog(dialog)
             sContent = "Fichier mise à jour %s / %s \n %s" %  (sdown, total, site)
             #self.TextBoxes('TvWatch mise à Jour', sContent)
 
-            cConfig().setSetting('service_time', str(datetime.datetime.now()))
-            cConfig().setSetting('home_update', str('false'))
+            self.oConfig.setSetting('service_time', str(datetime.datetime.now()))
+            self.oConfig.setSetting('home_update', str('false'))
 
-            fin = cConfig().createDialogOK(sContent)
-            cConfig().update()
+            fin = self.oConfig.createDialogOK(sContent)
+            self.oConfig.update()
         return
 
     def __download(self, WebUrl, RootUrl):

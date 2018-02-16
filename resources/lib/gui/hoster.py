@@ -142,7 +142,7 @@ class cHosterGui:
 
         except Exception, e:
             cConfig().error("Fichier introuvable")
-            cConfig().log('Error ' + e.message)
+            cConfig().log('play Hoster Erreur ' + e.message)
             return False
 
         # oGui.setEndOfDirectory()

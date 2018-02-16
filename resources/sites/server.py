@@ -218,8 +218,9 @@ def showMovies(sSearch = ''):
         # data = urllib.urlencode(query_args)
         # request = urllib2.Request(URL_SEARCH[0],data,headers)
 
-        query_args = "story=%s&do=search&subaction=search" % (sSearch)
-        request = urllib2.Request(URL_SEARCH[0] + query_args,None,headers)
+        query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ))
+        # query_args = "story=%s&do=search&subaction=search" % (sSearch)
+        request = urllib2.Request(URL_SEARCH[0] + query_args, None, headers)
         sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)" *><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?" *> ([^<]+?)<'
 
     else:
@@ -818,8 +819,8 @@ def getNextEpisode(title, sQual, nextSeason = False):
         quality, language = sQual.lower().replace(" ","").split("|")
 
     sSearch = title[:(title.find("Saison")-3)]
-    query_args = "story=%s&do=search&subaction=search" % (sSearch)
-    request = urllib2.Request(URL_SEARCH[0] + query_args,None,headers)
+    query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ))
+    request = urllib2.Request(URL_SEARCH[0] + query_args, None, headers)
     sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)" *><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?" *> ([^<]+?)<'
 
     reponse = urllib2.urlopen(request)
