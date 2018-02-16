@@ -25,15 +25,11 @@ class cAbout:
     def checksize(self, filepath, size):
         res = False
         try:
-            f = open(filepath)
-            Content = f.read()
-            f.close()
-            if len(Content) != size:
+            if os.path.getsize(filepath) != size:
                 res = True
         except (OSError, IOError) as e:
             #fichier n'existe pas
             cConfig().log("checksize ERROR: " + e.strerror)
-            # ret = False
         return res
 
     def getUpdate(self):
