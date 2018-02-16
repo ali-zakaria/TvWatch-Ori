@@ -49,11 +49,9 @@ class cAbout:
 
         if (service_time):
             #delay mise a jour
-            time_sleep = datetime.timedelta(hours=72)
+            time_sleep = datetime.timedelta(minutes=10)
             time_now = datetime.datetime.now()
             time_service = self.__strptime(service_time, "%Y-%m-%d %H:%M:%S.%f")
-            #pour test
-            #time_service = time_service - datetime.timedelta(hours=50)
             if (time_now - time_service > time_sleep):
                 self.checkupdate()
             else:
@@ -126,6 +124,7 @@ class cAbout:
 
 
     def checkupdate(self):
+        cConfig().log("checkupdate")
         version = cConfig().getAddonVersion()
         try:
             sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
@@ -133,7 +132,8 @@ class cAbout:
             oRequest =  urllib2.Request(sUrl + sRequest)
             oResponse = urllib2.urlopen(oRequest)
             sContent = oResponse.read()
-            if "Version" in sContent:
+            cConfig().log(sContent)
+            if "Current Version" in sContent:
                 sContent = sContent[sContent.find("Current Version"):]
                 if " - " in sContent:
                     sContent = sContent[:sContent.find(" - ")]
@@ -142,8 +142,8 @@ class cAbout:
                     sContent = sContent.replace(".","")
                     newVersion = int(sContent)
                     currentVersion = int(version.replace(".",""))
-                    # cConfig().log("checkupdate New Version: " + str(newVersion))
-                    # cConfig().log("checkupdate Current Version: " + str(currentVersion))
+                    cConfig().log("checkupdate New Version: " + str(newVersion))
+                    cConfig().log("checkupdate Current Version: " + str(currentVersion))
                     if newVersion > currentVersion:
                         cConfig().setSetting('home_update', str('true'))
                         cConfig().setSetting('service_time', str(datetime.datetime.now()))
