@@ -7,9 +7,11 @@ from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
+from resources.lib.util import VSlog, VSlang
 
 import urllib
 import xbmc
+import base64
 
 SITE_IDENTIFIER = 'cFav'
 SITE_NAME = 'Fav'
@@ -40,6 +42,7 @@ class cFav:
 
         compt = [0,0,0,0,0,0,0,0]
         for i in row:
+
             compt[int(i[5])] = compt[int(i[5])] + 1
 
         # sTitle = '[COLOR khaki]Vous avez %s marque page[/COLOR]' % (len(row))
@@ -49,11 +52,11 @@ class cFav:
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('sCat', '1')
-        oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Films (' + str(compt[1]) + ')', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getFav', VSlang(30120) + ' (' + str(compt[1]) + ')', 'mark.png', oOutputParameterHandler) # Films
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('sCat', '2')
-        oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Séries (' + str(compt[2]) + ')', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getFav', VSlang(30121) + ' (' + str(compt[2]) + ')', 'mark.png', oOutputParameterHandler) # Series
 
         # oOutputParameterHandler = cOutputParameterHandler()
         # oOutputParameterHandler.addParameter('sCat', '3')
@@ -61,29 +64,29 @@ class cFav:
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('sCat', '6')
-        oGui.addDir(SITE_IDENTIFIER, 'getFav', 'TV (' + str(compt[6]) + ')', 'mark.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'getFav', VSlang(30117) + ' (' + str(compt[6]) + ')', 'mark.png', oOutputParameterHandler) # TV replay
 
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('sCat', '4')
-        oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Sources (' + str(compt[4]) + ')', 'mark.png', oOutputParameterHandler)
+        # oOutputParameterHandler = cOutputParameterHandler()
+        # oOutputParameterHandler.addParameter('sCat', '4')
+        # oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Sources (' + str(compt[4]) + ')', 'mark.png', oOutputParameterHandler)
 
         # oOutputParameterHandler = cOutputParameterHandler()
         # oOutputParameterHandler.addParameter('sCat', '7')
         # oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Recherche Visuelle (' + str(compt[7]) + ')', 'mark.png', oOutputParameterHandler)
 
-        oOutputParameterHandler = cOutputParameterHandler()
-        oOutputParameterHandler.addParameter('sCat', '5')
-        oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Divers (' + str(compt[5]) + ')', 'mark.png', oOutputParameterHandler)
+        # oOutputParameterHandler = cOutputParameterHandler()
+        # oOutputParameterHandler.addParameter('sCat', '5')
+        # oGui.addDir(SITE_IDENTIFIER, 'getFav', 'Divers (' + str(compt[5]) + ')', 'mark.png', oOutputParameterHandler)
 
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('sAll', 'true')
-        oGui.addDir(SITE_IDENTIFIER, 'delFavourites', cConfig().getlanguage(30209), 'trash.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'delFavourites', VSlang(30209), 'trash.png', oOutputParameterHandler)
 
         #A virer dans les versions future, pour le moment c'est juste pr supprimer les liens bugges
-        if compt[0] > 0:
-            oOutputParameterHandler = cOutputParameterHandler()
-            oOutputParameterHandler.addParameter('sCat', '0')
-            oGui.addDir(SITE_IDENTIFIER, 'getFav', '[COLOR red]Erreur /!\ lien a supprimer !!! (' + str(compt[0]) + ')[/COLOR]', 'mark.png', oOutputParameterHandler)
+        # if compt[0] > 0:
+        #     oOutputParameterHandler = cOutputParameterHandler()
+        #     oOutputParameterHandler.addParameter('sCat', '0')
+        #     oGui.addDir(SITE_IDENTIFIER, 'getFav', '[COLOR red]Erreur /!\ lien a supprimer !!! (' + str(compt[0]) + ')[/COLOR]', 'mark.png', oOutputParameterHandler)
 
         oGui.setEndOfDirectory()
 
@@ -100,10 +103,12 @@ class cFav:
         row = cDb().get_favorite()
 
         for data in row:
-            try:
-                title = data[1].encode('utf-8')
-            except:
-                title = data[1]
+            # try:
+            #     title = data[1].encode('utf-8')
+            # except:
+            #     title = data[1]
+
+            title = base64.b16decode(data[1])
 
             try:
                 siteurl = urllib.unquote_plus(data[2])

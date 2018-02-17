@@ -590,8 +590,8 @@ msgid "TvWatch code"
 msgstr "TvWatch code"
 
 msgctxt "#30423"
-msgid "My List"
-msgstr "Ma Liste"
+msgid "My list"
+msgstr "Ma liste"
 
 msgctxt "#30424"
 msgid "Continue Watching"
@@ -728,3 +728,7 @@ msgstr "Google Play n'a pas pu démarrer.\nTéléchargez et installez l'applicat
 msgctxt "#30457"
 msgid "Do you want to start next episode ?"
 msgstr "Voulez-vous démarrer le prochain épisode ?"
+
+msgctxt "#30458"
+msgid "A problem occurred, please try again later"
+msgstr "Un problème est survenu, merci de réessayer ultérieurement"

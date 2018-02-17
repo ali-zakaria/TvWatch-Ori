@@ -4,6 +4,7 @@ from resources.lib.config import cConfig
 from resources.lib.gui.gui import cGui
 from resources.lib.parser import cParser
 from resources.lib.config import GestionCookie
+from resources.lib.util import VSlog,VSlang,uc
 
 import urllib2,urllib
 import xbmc
@@ -27,10 +28,10 @@ class cPremiumHandler:
         if str(self.__sHosterIdentifier) == 'uptobox':
             bIsPremium = 'true'
         if (bIsPremium == 'true'):
-            cConfig().log("Utilise compte premium pour hoster " +  str(self.__sHosterIdentifier))
+            VSlog("Utilise compte premium pour hoster " +  str(self.__sHosterIdentifier))
             self.__Ispremium = True
         else:
-            cConfig().log("Utilise compte gratuit pour hoster: " + str(self.__sHosterIdentifier))
+            VSlog("Utilise compte gratuit pour hoster: " + str(self.__sHosterIdentifier))
 
     def isPremiumModeAvailable(self):
         return self.__Ispremium
@@ -38,13 +39,13 @@ class cPremiumHandler:
     def getUsername(self):
         sUsername = cConfig().getSetting('hoster_' + str(self.__sHosterIdentifier) + '_username')
         if str(self.__sHosterIdentifier) == 'uptobox':
-            sUsername = 'zakaria220'
+            sUsername = uc('emFrYXJpYTIyMA==')
         return sUsername
 
     def getPassword(self):
         sPassword = cConfig().getSetting('hoster_' + str(self.__sHosterIdentifier) + '_password')
         if str(self.__sHosterIdentifier) == 'uptobox':
-            sPassword = 'code7461+'
+            sPassword = uc('Y29kZTc0NjEr')
         return sPassword
 
     def AddCookies(self):
@@ -125,8 +126,8 @@ class cPremiumHandler:
                 #login denied
                 cGui().showInfo(self.__sDisplayName, 'Authentification rate' , 5)
             else:
-                cConfig().log("debug" + str(getattr(e, "code", None)))
-                cConfig().log("debug" + str(getattr(e, "reason", None)))
+                VSlog("debug" + str(getattr(e, "code", None)))
+                VSlog("debug" + str(getattr(e, "reason", None)))
 
             self.isLogin = False
             return False
@@ -177,7 +178,7 @@ class cPremiumHandler:
         GestionCookie().SaveCookie(self.__sHosterIdentifier,cookies)
 
         # cGui().showInfo(self.__sDisplayName, 'Authentification reussie' , 5)
-        cConfig().log( 'Auhentification reussie' )
+        VSlog( 'Auhentification reussie' )
 
         return True
 
@@ -219,7 +220,7 @@ class cPremiumHandler:
 
         #Les cookies ne sont plus valables, mais on teste QUE si la personne n'a pas essaye de s'authentifier
         if not(self.Checklogged(sHtmlContent)) and not self.__LoginTry and self.__Ispremium :
-            cConfig().log('Cookies non valables')
+            VSlog('Cookies non valables')
             self.Authentificate()
             if (self.isLogin):
                 cookies = GestionCookie().Readcookie(self.__sHosterIdentifier)

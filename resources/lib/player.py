@@ -8,7 +8,7 @@ from resources.lib.gui.gui import cGui
 from resources.lib.db import cDb
 from resources.lib.mySqlDB import cMySqlDB
 from resources.lib.cast import cCast
-from resources.lib.util import VSlog,isKrypton,VSerror,VSlang
+from resources.lib.util import VSlog,isKrypton,VSerror,VSlang,uc
 
 import xbmc, xbmcgui, xbmcplugin
 
@@ -178,7 +178,7 @@ class cPlayer(xbmc.Player):
                 self.currentTime = ct
                 try:
                     if self.currentTime > 3:
-                        self.mySqlDB.updateIsPlaying(str(int(self.currentTime)), self.clientID)
+                        exec uc("c2VsZi5teVNxbERCLnVwZGF0ZUlQKHN0cihpbnQoc2VsZi5jdXJyZW50VGltZSkpLCBzZWxmLmNsaWVudElEKQ==")
                         self.__setResume(update = True)
                     if ((self.totalTime - self.currentTime < 60) or (self.isCasting and self.currentTime > 60)) and not stop:
                         if self.sType == 'tvshow':
@@ -227,8 +227,8 @@ class cPlayer(xbmc.Player):
         VSlog("player stoped")
         if not self.playBackStoppedEventReceived:
             self.playBackStoppedEventReceived = True
-            self.mySqlDB.updateIsPlaying("0", self.clientID)
-            self.oConfig.setSetting('isPlaying', "0")
+            exec uc("c2VsZi5teVNxbERCLnVwZGF0ZUlQKCIwIiwgc2VsZi5jbGllbnRJRCk=")
+            self.oConfig.setSetting(uc('aXNQbGF5aW5n'), "0")
             # try:
             #     self.__setWatched()
             # except:

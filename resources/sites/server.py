@@ -11,17 +11,13 @@ from resources.lib.handler.inputParameterHandler import cInputParameterHandler
 from resources.lib.handler.outputParameterHandler import cOutputParameterHandler
 from resources.lib.handler.requestHandler import cRequestHandler
 from resources.lib.parser import cParser
-from resources.lib.util import cUtil
-from resources.lib import util
+from resources.lib.util import cUtil, VSlog, VSlang, VScreateDialogOK
 from resources.lib.db import cDb
 
 import urllib,re,urllib2
 import xbmcgui
 import xbmc
 import random
-
-
-#from resources.lib.dl_deprotect import DecryptDlProtect
 
 UA = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
 headers = { 'User-Agent' : UA }
@@ -68,37 +64,37 @@ def load():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://primatech/')
-    oGui.addDir(SITE_IDENTIFIER, 'showSearch', util.VSlang(30076), 'search.png', oOutputParameterHandler) # Recherche
+    oGui.addDir(SITE_IDENTIFIER, 'showSearch', VSlang(30076), 'search.png', oOutputParameterHandler) # Recherche
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oGui.addDir(SITE_IDENTIFIER, 'continueToWatch', '[B][COLOR khaki]' + util.VSlang(30424) + '[/COLOR][/B]', 'mark.png', oOutputParameterHandler) # Continuer à regarder
+    oGui.addDir(SITE_IDENTIFIER, 'continueToWatch', '[B][COLOR khaki]' + VSlang(30424) + '[/COLOR][/B]', 'mark.png', oOutputParameterHandler) # Continuer à regarder
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oGui.addDir(SITE_IDENTIFIER, 'showFilms', util.VSlang(30120), 'films.png', oOutputParameterHandler) # Films
+    oGui.addDir(SITE_IDENTIFIER, 'showFilms', VSlang(30120), 'films.png', oOutputParameterHandler) # Films
 
     oOutputParameterHandler = cOutputParameterHandler()
-    oGui.addDir(SITE_IDENTIFIER, 'showSeries', util.VSlang(30121), 'replay.png', oOutputParameterHandler) # Series
+    oGui.addDir(SITE_IDENTIFIER, 'showSeries', VSlang(30121), 'replay.png', oOutputParameterHandler) # Series
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', DOC_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30112), 'doc.png', oOutputParameterHandler) # Documentaires
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30112), 'doc.png', oOutputParameterHandler) # Documentaires
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', TV_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30117), 'tv.png', oOutputParameterHandler) # TV replay
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30117), 'tv.png', oOutputParameterHandler) # TV replay
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SPECT_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30425), 'host.png', oOutputParameterHandler) # Spectacles
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30425), 'host.png', oOutputParameterHandler) # Spectacles
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
-    oGui.addDir('cFav', 'getFavourites', util.VSlang(30423), 'star.png', oOutputParameterHandler) # Ma liste
+    oGui.addDir('cFav', 'getFavourites', VSlang(30423), 'star.png', oOutputParameterHandler) # Ma liste
 
     if (cConfig().getSetting('home_update') == 'true'):
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', 'http://primatech')
-        oGui.addDir(SITE_IDENTIFIER, 'showUpdate', util.VSlang(30418), 'update.png', oOutputParameterHandler)
+        oGui.addDir(SITE_IDENTIFIER, 'showUpdate', VSlang(30418), 'update.png', oOutputParameterHandler)
 
     oGui.setEndOfDirectory(50)
 
@@ -112,12 +108,12 @@ def showFilms():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_NEWS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30426), 'news.png', oOutputParameterHandler) #Nouveautés
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30426), 'news.png', oOutputParameterHandler) #Nouveautés
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_EXCLUS[0])
     oOutputParameterHandler.addParameter('movie', "True")
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30427), 'sport.png', oOutputParameterHandler) #Populaires
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30427), 'sport.png', oOutputParameterHandler) #Populaires
 
     #oOutputParameterHandler = cOutputParameterHandler()
     #oOutputParameterHandler.addParameter('siteUrl', MOVIE_GENRES[0])
@@ -125,23 +121,23 @@ def showFilms():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_HD[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30428), 'hd.png', oOutputParameterHandler) #Blu-rays
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30428), 'hd.png', oOutputParameterHandler) #Blu-rays
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_3D[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30429), 'hd.png', oOutputParameterHandler) #Films 3D
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30429), 'hd.png', oOutputParameterHandler) #Films 3D
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_HDLIGHT[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30430), 'hd.png', oOutputParameterHandler) #Films HDLight
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30430), 'hd.png', oOutputParameterHandler) #Films HDLight
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_4K[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30431), 'hd.png', oOutputParameterHandler) #Films 4K
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30431), 'hd.png', oOutputParameterHandler) #Films 4K
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', MOVIE_ANIME[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30432), 'animes.png', oOutputParameterHandler) #Dessins Animés
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30432), 'animes.png', oOutputParameterHandler) #Dessins Animés
 
     oGui.setEndOfDirectory(50)
 
@@ -150,19 +146,19 @@ def showSeries():
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30433), 'vf.png', oOutputParameterHandler) #Séries VF
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30433), 'vf.png', oOutputParameterHandler) #Séries VF
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', SERIE_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30434), 'vostfr.png', oOutputParameterHandler) #Séries VOSTFR
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30434), 'vostfr.png', oOutputParameterHandler) #Séries VOSTFR
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VFS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30435), 'animes.png', oOutputParameterHandler) #Dessins Animés VF
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30435), 'animes.png', oOutputParameterHandler) #Dessins Animés VF
 
     oOutputParameterHandler = cOutputParameterHandler()
     oOutputParameterHandler.addParameter('siteUrl', ANIM_VOSTFRS[0])
-    oGui.addDir(SITE_IDENTIFIER, 'showMovies', util.VSlang(30436), 'animes.png', oOutputParameterHandler) #Dessins Animés VOSTFR
+    oGui.addDir(SITE_IDENTIFIER, 'showMovies', VSlang(30436), 'animes.png', oOutputParameterHandler) #Dessins Animés VOSTFR
 
     oGui.setEndOfDirectory(50)
 
@@ -214,13 +210,8 @@ def showMovies(sSearch = ''):
             bGlobal_Search = True
             sSearch=sSearch.replace(URL_SEARCH[0],'')
 
-        # query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ))
-        # data = urllib.urlencode(query_args)
-        # request = urllib2.Request(URL_SEARCH[0],data,headers)
-
-        query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ))
+        query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ), ('titleonly' , '3' ))
         data = urllib.urlencode(query_args)
-        # query_args = "story=%s&do=search&subaction=search" % (sSearch)
         request = urllib2.Request(URL_SEARCH[0] + data, None, headers)
         sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)" *><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?" *> ([^<]+?)<'
 
@@ -231,7 +222,7 @@ def showMovies(sSearch = ''):
             movie = oInputParameterHandler.getValue('movie')
         except:
             pass
-        # cConfig().log(sUrl)
+        # VSlog(sUrl)
         request = urllib2.Request(sUrl, None, headers)
         sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)"><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?"> ([^<]+?)<'
 
@@ -239,16 +230,16 @@ def showMovies(sSearch = ''):
     sHtmlContent = reponse.read()
     reponse.close()
 
-    # cConfig().log(sHtmlContent)
+    # VSlog(sHtmlContent)
 
     oParser = cParser()
     aResult = oParser.parse(sHtmlContent, sPattern)
 
-    # cConfig().log(aResult)
+    # VSlog(aResult)
 
     #print aResult
     if (aResult[0] == False):
-        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30438) + '[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30438) + '[/COLOR]')
         view = 50
 
     if (aResult[0] == True):
@@ -281,7 +272,7 @@ def showMovies(sSearch = ''):
             sThumbnail = sThumbnail.replace("zone-telechargement.ws","zone-telechargement1.com")
             sThumbnail = sThumbnail.replace("https://ww1.zone-telechargement","https://www.zone-telechargement")
 
-            sDisplayTitle = cUtil().DecoTitle(sTitle)
+            sDisplayTitle = sTitle
 
             if 'films-gratuit' in sUrl2 or '4k' in sUrl2:
                 oGui.addMovie(SITE_IDENTIFIER, 'showMoviesLinks', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler)
@@ -327,7 +318,7 @@ def showMoviesLinks():
     oParser = cParser()
 
     #Affichage du menu
-    oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30443) + '[/COLOR]')
+    oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30443) + '[/COLOR]')
 
     #on recherche d'abord la qualité courante
     sPattern = '<div style="[^"]+?"> *Qualité (.+?)<\/div>'
@@ -407,7 +398,7 @@ def showSeriesLinks():
     if (aResult[1]):
         sQual = aResult[1][0]
 
-    sDisplayTitle = cUtil().DecoTitle(sMovieTitle) + ' [COLOR skyblue]' + sQual + '[/COLOR]'
+    sDisplayTitle = sMovieTitle + ' [COLOR skyblue]' + sQual + '[/COLOR]'
 
     meta = {}
     meta['siteUrl'] = sUrl
@@ -435,7 +426,7 @@ def showSeriesLinks():
     if (aResult1[0] == True):
         for aEntry in aResult1[1]:
             sQual = aEntry[1] + " |" + aEntry[2].replace("(","").replace(")","")
-            sDisplayTitle = cUtil().DecoTitle(sMovieTitle) + ' [COLOR skyblue]' + sQual + '[/COLOR]'
+            sDisplayTitle = sMovieTitle + ' [COLOR skyblue]' + sQual + '[/COLOR]'
             sUrl = URL_MAIN + 'telecharger-series' + aEntry[0]
 
             meta = {}
@@ -486,10 +477,10 @@ def showSeriesLinks():
     stop = True
     seasons, currentSeason, currentEpisode = sortSeasonsAndGetCurrentSeason(seasons)
     if currentSeason != 0:
-        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30446) + '[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30446) + '[/COLOR]')
         stop = False
     else:
-        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30444) + '[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30444) + '[/COLOR]')
     for season in seasons:
         oOutputParameterHandler = cOutputParameterHandler()
         oOutputParameterHandler.addParameter('siteUrl', season['siteUrl'])
@@ -502,14 +493,14 @@ def showSeriesLinks():
             oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', season['sDisplayTitle'], '', season['sThumbnail'], '', oOutputParameterHandler, meta=True)
         else:
             if not stop:
-                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30445) + '[/COLOR]')
+                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30445) + '[/COLOR]')
                 stop = True
             oGui.addTV(SITE_IDENTIFIER, 'showSeriesHosters', season['sDisplayTitle'], '', season['sThumbnail'], '', oOutputParameterHandler, meta=True)
 
     oGui.setEndOfDirectory()
 
 def showHosters():# recherche et affiche les hotes
-    cConfig().log('showHosters')
+    VSlog('showHosters')
 
     params = ['','','','','']
 
@@ -570,7 +561,7 @@ def showHosters():# recherche et affiche les hotes
     Display_protected_link(params)
 
 def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
-    cConfig().log('showSeriesHosters')
+    VSlog('showSeriesHosters')
 
     oGui = cGui()
     oInputParameterHandler = cInputParameterHandler() #apelle l'entree de paramettre
@@ -589,7 +580,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
     oRequestHandler = cRequestHandler(sUrl)
     sHtmlContent = oRequestHandler.request()
 
-    # cConfig().log(sHtmlContent)
+    # VSlog(sHtmlContent)
 
     #Fonction pour recuperer uniquement les liens
     #sHtmlContent = Cutlink(sHtmlContent)
@@ -603,7 +594,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
     sPattern = '<div style="font-weight:bold;color:[^"]+?">([^<]+)</div>|<a target="_blank" href="https://([^"]+)/([^"]+?)">([^<]+)<'
     aResult = oParser.parse(sHtmlContent, sPattern)
 
-    # cConfig().log(aResult)
+    # VSlog(aResult)
 
     if (aResult[0] == True):
         dialog = cConfig().createDialog(SITE_NAME)
@@ -639,7 +630,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
                 # if sName != '' and sName.find('pisode') != -1:
                 sTitle = sMovieTitle + ' ' + sName
                 sTitle = sTitle.replace('[COMPLETE] ','')
-                sDisplayTitle = cUtil().DecoTitle(sTitle)
+                sDisplayTitle = sTitle
                 URL_DECRYPT = aEntry[1]
 
                 meta = {}
@@ -661,7 +652,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
                             if int(currentSeason) != int(season[1]):
                                 currentEpisode = '0'
                         except Exception, e:
-                            cConfig().log("Issue on showSeriesHosters (season): " + e.message)
+                            VSlog("Issue on showSeriesHosters (season): " + e.message)
                             currentEpisode = '0'
                 elif "Episode" not in sTitle and "Saison" not in sTitle:
                     episodes.append(meta)
@@ -672,15 +663,15 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
                     episodes[i], episodes[0] = episodes[0], episodes[i]
                     break
             except Exception, e:
-                cConfig().log("Issue on showSeriesHosters (episode): " + e.message)
+                VSlog("Issue on showSeriesHosters (episode): " + e.message)
                 break
 
         stop = True
         if int(currentEpisode) != 0:
-            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30446) + '[/COLOR]')
+            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30446) + '[/COLOR]')
             stop = False
         else:
-            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30447) + '[/COLOR]')
+            oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30447) + '[/COLOR]')
         for episode in episodes:
             oOutputParameterHandler = cOutputParameterHandler()
             oOutputParameterHandler.addParameter('siteUrl', episode['siteUrl'])
@@ -691,7 +682,7 @@ def showSeriesHosters(params = ['','','']):# recherche et affiche les hotes
             oOutputParameterHandler.addParameter('refresh', episode['refresh'])
             oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', episode['sDisplayTitle'], '', episode['sThumbnail'], '', oOutputParameterHandler, meta=True)
             if not stop:
-                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30448) + '[/COLOR]')
+                oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30448) + '[/COLOR]')
                 stop = True
 
         cConfig().finishDialog(dialog)
@@ -712,14 +703,14 @@ def showStreamingHosters():# recherche et affiche les hotes
     sPattern = '<iframe.+?src="(.+?)"'
 
     aResult = oParser.parse(sHtmlContent, sPattern)
-    #cConfig().log(str(sUrl))
+    #VSlog(str(sUrl))
 
     if (aResult[0] == True):
         for aEntry in aResult[1]:
             sHosterUrl = aEntry
             #print sHosterUrl
 
-            sDisplayTitle = cUtil().DecoTitle(sMovieTitle)
+            sDisplayTitle = sMovieTitle
 
             oHoster = cHosterGui().checkHoster(sHosterUrl)
             if (oHoster != False):
@@ -730,7 +721,7 @@ def showStreamingHosters():# recherche et affiche les hotes
     oGui.setEndOfDirectory()
 
 def Display_protected_link(params = ['','','','',''], playNow = True):
-    cConfig().log('Display_protected_link')
+    VSlog('Display_protected_link')
     oInputParameterHandler = cInputParameterHandler()
     sUrl = oInputParameterHandler.getValue('siteUrl')
     sMovieTitle = oInputParameterHandler.getValue('sMovieTitle')
@@ -761,7 +752,7 @@ def Display_protected_link(params = ['','','','',''], playNow = True):
                 aResult_dlprotecte = oParser.parse(sHtmlContent, sPattern_dlprotecte)
 
         else:
-            oDialog = cConfig().createDialogOK('Erreur décryptage du lien')
+            oDialog = VScreateDialogOK(VSlang(30458))
             aResult_dlprotecte = (False, False)
 
     #Si lien normal
@@ -778,7 +769,7 @@ def Display_protected_link(params = ['','','','',''], playNow = True):
             if len(aResult_dlprotecte[1]) > 1:
                 sTitle = sMovieTitle + ' episode ' + str(episode)
 
-            sDisplayTitle = cUtil().DecoTitle(sTitle)
+            sDisplayTitle = sTitle
 
             episode+=1
             oHoster = cHosterGui().checkHoster(sHosterUrl)
@@ -804,12 +795,12 @@ def Display_protected_link(params = ['','','','',''], playNow = True):
                 return []
 
 def prepareNextEpisode(sMovieTitle, sQual, sType):
-    cConfig().log("Début prepareNextEpisode")
+    VSlog("Début prepareNextEpisode")
     if sType == 'tvshow':
         params = getNextEpisode(sMovieTitle, sQual)
         if params:
             test = Display_protected_link(params, False)
-            cConfig().log("Fin prepareNextEpisode")
+            VSlog("Fin prepareNextEpisode")
             return test
     return None
 
@@ -817,13 +808,13 @@ def playUrl(playParams):
     cHosterGui().play(playParams)
 
 def getNextEpisode(title, sQual, nextSeason = False):
-    cConfig().log('getNextEpisode: current ' + title)
+    VSlog('getNextEpisode: current ' + title)
 
     if type(sQual) is str:
         quality, language = sQual.lower().replace(" ","").split("|")
 
     sSearch = title[:(title.find("Saison")-3)]
-    query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ))
+    query_args = ( ( 'do' , 'search' ) , ('subaction' , 'search' ) , ('story' , sSearch ) , ('titleonly' , '3' ))
     data = urllib.urlencode(query_args)
     request = urllib2.Request(URL_SEARCH[0] + data, None, headers)
     sPattern = '<div style="height:[0-9]{3}px;"> *<a href="([^"]+)" *><img class="[^"]+?" data-newsid="[^"]+?" src="([^<"]+)".+?<div class="[^"]+?" style="[^"]+?"> *<a href="[^"]+?" *> ([^<]+?)<'
@@ -846,7 +837,7 @@ def getNextEpisode(title, sQual, nextSeason = False):
                 except:
                     sSeasonNum = 0
             except Exception, e:
-                cConfig().log('getNextEpisode ERROR : ' + e.message)
+                VSlog('getNextEpisode ERROR : ' + e.message)
 
         sEpisode = None
         if "Episode " in title:
@@ -861,12 +852,12 @@ def getNextEpisode(title, sQual, nextSeason = False):
                 foundThumbnail = URL_MAIN+aEntry[1]
 
             if sSeason in sMovieTitle:
-                cConfig().log("Saison OK")
+                VSlog("Saison OK")
                 qualAndLang = False
                 if (quality in sUrl.replace("-","")) and (language in sUrl.replace("-","")):
                     qualAndLang = True
                 if qualAndLang:
-                    cConfig().log("Quality and Language OK")
+                    VSlog("Quality and Language OK")
 
                     oRequestHandler = cRequestHandler(sUrl)
                     sHtmlContent = oRequestHandler.request()
@@ -906,7 +897,7 @@ def getNextEpisode(title, sQual, nextSeason = False):
                                 if sName != '' and sName.find('pisode') != -1:
                                     sTitle = sMovieTitle + ' ' + sName
                                     sTitle = sTitle.replace('[COMPLETE] ','')
-                                    sDisplayTitle = cUtil().DecoTitle(sTitle)
+                                    sDisplayTitle = sTitle
                                     URL_DECRYPT = aEntry[1]
 
                                     foundUrl = sUrl2
@@ -932,7 +923,7 @@ def getNextEpisode(title, sQual, nextSeason = False):
                                     getNextOne = True
 
                         if params != ['','','','','']:
-                            cConfig().log('getNextEpisode: target ' + foundTitle)
+                            VSlog('getNextEpisode: target ' + foundTitle)
                             return params
                             break
                         elif not nextSeason:
@@ -979,7 +970,7 @@ def continueToWatch():
         oOutputParameterHandler.addParameter('sQual', sQual)
         oOutputParameterHandler.addParameter('refresh', "True")
 
-        sDisplayTitle = cUtil().DecoTitle(sTitle)
+        sDisplayTitle = sTitle
 
         if sType == 'tvshow':
             oGui.addTV(SITE_IDENTIFIER, 'Display_protected_link', sDisplayTitle, '', sThumbnail, '', oOutputParameterHandler, continueToWatchFolder = True)
@@ -988,7 +979,7 @@ def continueToWatch():
 
     oConfig.finishDialog(dialog)
     if len(matchedrow) == 0:
-        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + util.VSlang(30449) + '[/COLOR]')
+        oGui.addText(SITE_IDENTIFIER,'[COLOR khaki]' + VSlang(30449) + '[/COLOR]')
         oGui.setEndOfDirectory(50)
     else:
         oGui.setEndOfDirectory(500)
@@ -1036,8 +1027,7 @@ def CutPremiumlinks(sHtmlContent):
     return sHtmlContent
 
 def DecryptDlProtecte(url):
-
-    cConfig().log('DecryptDlProtecte : ' + url)
+    VSlog('DecryptDlProtecte : ' + url)
 
     if not (url):
         return ''
@@ -1058,8 +1048,6 @@ def DecryptDlProtecte(url):
     #url2 = 'https://www.protect-zt.com/php/Qaptcha.jquery.php'
     url2 = 'https://' + url.split('/')[2] + '/php/Qaptcha.jquery.php'
 
-    #cConfig().log(url2)
-
     #Make random key
     s = "azertyupqsdfghjkmwxcvbn23456789AZERTYUPQSDFGHJKMWXCVBN_-#@";
     RandomKey = ''.join(random.choice(s) for i in range(32))
@@ -1075,43 +1063,40 @@ def DecryptDlProtecte(url):
     #Requete
     request = urllib2.Request(url2,data,headers1)
     try:
-        reponse = urllib2.urlopen(request,timeout = 5)
+        reponse = urllib2.urlopen(request,timeout = 10)
     except urllib2.URLError, e:
-        cGui().showInfo("Erreur", 'Site Dl-Protecte HS' , 5)
-        cConfig().log( e.read() )
-        cConfig().log( e.reason )
+        VSlog('DecryptDlProtecte: ' + e.read())
+        VSlog('DecryptDlProtecte: ' + e.reason)
         return ''
     except urllib2.HTTPError, e:
-        cGui().showInfo("Erreur", 'Site Dl-Protecte HS' , 5)
-        cConfig().log( e.read() )
-        cConfig().log( e.reason )
+        VSlog('DecryptDlProtecte: ' + e.read())
+        VSlog('DecryptDlProtecte: ' + e.reason)
         return ''
-    except Exception:
-        cConfig().log('timeout')
-        cGui().showInfo("Erreur", 'Site Dl-Protecte HS' , 5)
+    except Exception, e:
+        VSlog('DecryptDlProtecte: ' + e.message)
         return ''
 
     sHtmlContent = reponse.read()
 
-    #cConfig().log( 'result'  + str(sHtmlContent))
+    #VSlog( 'result'  + str(sHtmlContent))
 
     #Recuperatioen et traitement cookies ???
     cookies=reponse.info()['Set-Cookie']
     c2 = re.findall('(?:^|,) *([^;,]+?)=([^;,\/]+?);',cookies)
     if not c2:
-        cConfig().log( 'Probleme de cookies' )
+        VSlog( 'DecryptDlProtecte: Probleme de cookies' )
         return ''
     cookies = ''
     for cook in c2:
         cookies = cookies + cook[0] + '=' + cook[1] + ';'
 
-    #cConfig().log( 'Cookie'  + str(cookies))
+    #VSlog( 'Cookie'  + str(cookies))
 
     reponse.close()
 
     if not '"error":false' in sHtmlContent:
-        cConfig().log( 'Captcha rate' )
-        cConfig().log( sHtmlContent )
+        VSlog( 'DecryptDlProtecte: Captcha rate' )
+        VSlog( sHtmlContent )
         return
 
     #Creation Header
@@ -1135,8 +1120,8 @@ def DecryptDlProtecte(url):
     multipart_form_data = { RandomKey : '', 'submit' : 'Valider' }
     data, headersMulti = encode_multipart(multipart_form_data, {},boundary)
     headers2.update(headersMulti)
-    #cConfig().log( 'header 2'  + str(headersMulti))
-    #cConfig().log( 'data 2'  + str(data))
+    #VSlog( 'header 2'  + str(headersMulti))
+    #VSlog( 'data 2'  + str(data))
 
     #rajout des cookies
     headers2.update({'Cookie': cookies})
@@ -1144,22 +1129,17 @@ def DecryptDlProtecte(url):
     #Modifications
     headers2.update({'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'})
 
-    #cConfig().log( str(headers2) )
+    #VSlog( str(headers2) )
 
     #Requete
     request = urllib2.Request(url,data,headers2)
     try:
         reponse = urllib2.urlopen(request)
     except urllib2.URLError, e:
-        print e.read()
-        print e.reason
+        VSlog('DecryptDlProtecte: ' + e.read())
+        VSlog('DecryptDlProtecte: ' + e.reason)
 
     sHtmlContent = reponse.read()
-
-    #fh = open('c:\\test.txt', "w")
-    #fh.write(sHtmlContent)
-    #fh.close()
-
     reponse.close()
 
     return sHtmlContent

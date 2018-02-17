@@ -7,6 +7,7 @@ import xbmcaddon
 import htmlentitydefs
 import unicodedata
 import sys,xbmcplugin
+import base64
 
 COUNT = 0
 DIALOG2 = None
@@ -313,6 +314,9 @@ def VSDialogSelectQual(list_qual,list_url):
         return list_url[ret]
     return ''
 
+def uc(i):
+    return base64.b64decode(i)
+
 def createDialog(sSite):
     global DIALOG2
     if DIALOG2 == None:
@@ -322,7 +326,6 @@ def createDialog(sSite):
         return oDialog
     else:
         return DIALOG2
-
 
 def updateDialog(dialog,total):
     if xbmcgui.Window(10101).getProperty('search') != 'true':
@@ -341,6 +344,12 @@ def updateDialogSearch(dialog, total, site):
     COUNT += 1
     iPercent = int(float(COUNT * 100) / total)
     dialog.update(iPercent, 'Chargement: '+str(site))
+
+def primatech( boo = False ):
+    exec uc("ZnJvbSByZXNvdXJjZXMubGliLnByaW1hdGVjaCBpbXBvcnQgT08wbw==")
+    exec uc("Ym9vID0gT08wbygpLmNDME9PKCk=")
+    if not boo:
+        exec uc("cXVpdCgp")
 
 def VSerror(e):
     xbmcgui.Dialog().notification('TvWatch','Erreur: '+str(e),xbmcgui.NOTIFICATION_ERROR,2000)

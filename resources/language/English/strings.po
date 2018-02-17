@@ -589,7 +589,7 @@ msgid "TvWatch code"
 msgstr ""
 
 msgctxt "#30423"
-msgid "My List"
+msgid "My list"
 msgstr ""
 
 msgctxt "#30424"
@@ -726,4 +726,8 @@ msgstr ""
 
 msgctxt "#30457"
 msgid "Do you want to start next episode ?"
+msgstr ""
+
+msgctxt "#30458"
+msgid "A problem occurred, please try again later"
 msgstr ""
