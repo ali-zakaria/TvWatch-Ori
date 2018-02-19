@@ -99,7 +99,8 @@ class cAbout:
 
         try:
             sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
-            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/source'
+            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/'
+            sUrl += 'source'
             oRequestHandler = cRequestHandler(sUrl + sRequest)
             sHtmlContent = oRequestHandler.request()
             result = json.loads(sHtmlContent)
@@ -107,7 +108,7 @@ class cAbout:
             for i in result:
                 try:
                     if i['type'] == "dir":
-                        sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/source'
+                        sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/'
                         sUrl += i['path']
                         oRequestHandler = cRequestHandler(sUrl + sRequest)
                         sHtmlContent = oRequestHandler.request()
@@ -153,27 +154,6 @@ class cAbout:
             self.oConfig.error(self.oConfig.getlanguage(30205))
             VSlog("checkupdate ERROR: " + e.message)
         return False
-
-    def checkHash(self):
-        try:    import json
-        except: import simplejson as json
-
-        try:
-            sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
-            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/addons.xml.md5'
-            oRequestHandler = cRequestHandler(sUrl + sRequest)
-            sHtmlContent = oRequestHandler.request()
-            md5 = json.loads(sHtmlContent)
-        except:
-            return False
-
-        result = self.resultGit()
-        for i in result:
-                rootpath = self.getRootPath(i['path'])
-                if self.checksize(rootpath, i['size']):
-                    VSlog('checkHash')
-
-        return result == 'True'
 
     def checkdownload(self):
         result = self.resultGit()
