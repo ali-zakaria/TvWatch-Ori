@@ -1,6 +1,6 @@
 =============================================================================
-- Version & Repository: https://github.com/zakaria220/kodiStream/releases
-- Question & Support: https://github.com/zakaria220/kodiStream/issues
+- Version & Repository: https://github.com/zakaria220/TvWatch/releases
+- Question & Support: https://github.com/zakaria220/TvWatch/issues
 =============================================================================
 - Auteurs : zakaria220
 =============================================================================
