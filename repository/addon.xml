@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="plugin.video.tvwatch" name="TvWatch" version="1.0.0" provider-name="Primatech">
+    <requires>
+        <import addon="xbmc.python" version="2.24.0"/>
+        <import addon="script.common.plugin.cache" version="0.9.1"/>
+        <import addon="plugin.video.youtube" version="2.9.2"/>
+        <import addon="script.module.simplejson" version="2.0.10"/>
+        <import addon="script.module.myconnpy" version="1.1.7"/>
+        <import addon="script.module.urlresolver" optional="true"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+      <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="fr">TvWatch</summary>
+        <description lang="fr">TvWatch est un module de streaming français, trouvez tous vos films, séries et mangas.</description>
+        <summary lang="en">TvWatch</summary>
+        <description lang="en">TvWatch is a module for french streaming, find all your movies, TV shows and mangas.</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+
+<addon id="repository.tvwatch"
+        name="TvWatch Repository"
+        version="0.0.1"
+        provider-name="Primatech">
+    <extension point="xbmc.addon.repository" name="TvWatch XBMC Addon Repository">
+        <checksum>https://raw.githubusercontent.com/zakaria220/TvWatch/master/addons.xml.md5</checksum>
+        <info compressed="false">https://raw.githubusercontent.com/zakaria220/TvWatch/master/addons.xml</info>
+        <datadir zip="true">https://github.com/zakaria220/TvWatch/raw/master/repository</datadir>
+    </extension>
+
+    <extension point="xbmc.addon.metadata">
+        <summary lang="fr">TvWatch Repository</summary>
+        <description lang="fr">Telecharger et Installer TvWatch</description>
+        <summary lang="en">TvWatch Repository</summary>
+        <description lang="en">Download and install TvWatch</description>
+        <platform>all</platform>
+    </extension>
+</addon>
+</addons>

@@ -1,0 +1,1 @@
+- Fix code check when user is playing an item
