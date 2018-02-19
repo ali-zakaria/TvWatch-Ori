@@ -241,9 +241,6 @@ class cUtil:
 #Fonctions lights
 #***********************
 
-#Pour les avoir
-#from resources.lib import util
-#puis util.VSlog('test')
 def isKrypton():
     try:
         version = xbmc.getInfoLabel('system.buildversion')

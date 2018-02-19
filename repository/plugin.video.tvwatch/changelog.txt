@@ -1,0 +1,11 @@
+=============================================================================
+- Version & Repository: https://github.com/zakaria220/kodiStream/releases
+- Question & Support: https://github.com/zakaria220/kodiStream/issues
+=============================================================================
+- Auteurs : zakaria220
+=============================================================================
+- Current Version 1.0.0 - 16.02.2018
+=============================================================================
+23-01-2018 -- @zakaria220 -- Initial commit
+06-02-2018 -- @zakaria220 -- Improvement continue to watch
+16-02-2018 -- @zakaria220 -- First stable version
