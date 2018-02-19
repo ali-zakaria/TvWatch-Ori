@@ -229,6 +229,7 @@ class cPlayer(xbmc.Player):
             self.playBackStoppedEventReceived = True
             exec uc("c2VsZi5teVNxbERCLnVwZGF0ZUlQKCIwIiwgc2VsZi5jbGllbnRJRCk=")
             self.oConfig.setSetting(uc('aXNQbGF5aW5n'), "0")
+            self.oConfig.setSetting(uc('bXlTZWxmUGxheQ=='), "False")
             # try:
             #     self.__setWatched()
             # except:
@@ -249,6 +250,7 @@ class cPlayer(xbmc.Player):
     def onPlayBackStarted(self):
         VSlog("player started")
 
+        self.oConfig.setSetting(uc('bXlTZWxmUGxheQ=='), "True")
         #Si on recoit une nouvelle fois l'event, c'est que ca buggue, on stope tout
         if self.playBackEventReceived:
             self.forcestop = True
