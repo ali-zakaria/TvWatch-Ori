@@ -70,7 +70,7 @@ class cAbout:
             version = self.oConfig.getAddonVersion()
             if (version > service_version):
                 try:
-                    sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/changelog.txt'
+                    sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/source/changelog.txt'
                     oRequest =  urllib2.Request(sUrl)
                     oResponse = urllib2.urlopen(oRequest)
                     sContent = oResponse.read()
@@ -99,7 +99,7 @@ class cAbout:
 
         try:
             sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
-            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents'
+            sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/source'
             oRequestHandler = cRequestHandler(sUrl + sRequest)
             sHtmlContent = oRequestHandler.request()
             result = json.loads(sHtmlContent)
@@ -107,7 +107,7 @@ class cAbout:
             for i in result:
                 try:
                     if i['type'] == "dir":
-                        sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/'
+                        sUrl = 'https://api.github.com/repos/zakaria220/TvWatch/contents/source'
                         sUrl += i['path']
                         oRequestHandler = cRequestHandler(sUrl + sRequest)
                         sHtmlContent = oRequestHandler.request()
@@ -125,7 +125,7 @@ class cAbout:
         version = self.oConfig.getAddonVersion()
         try:
             sRequest = '?client_id=' + self.client_id + '&client_secret=' + self.client_secret
-            sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/changelog.txt'
+            sUrl = 'https://raw.githubusercontent.com/zakaria220/TvWatch/master/source/changelog.txt'
             oRequest =  urllib2.Request(sUrl + sRequest)
             oResponse = urllib2.urlopen(oRequest)
             sContent = oResponse.read()
